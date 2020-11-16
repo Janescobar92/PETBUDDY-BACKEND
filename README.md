@@ -2,8 +2,13 @@
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
 <p align="center">
-    <a href="https://youtu.be/ORxQ-K3BzQA"><img height="200px" src="https://github.com/4GeeksAcademy/flask-rest-hello/blob/master/docs/assets/how-to.png?raw=true" /></a>
+<a href="https://www.figma.com/file/8xHaE8JAjJUw5Uaeqqb2Gl/PetBuddy--mockup?node-id=0%3A1">FIGMA MOCKUPS</a>
 </p>
+
+<img src="src/img/PETBUDDY_DB_MODEL.png">
+<a href="https://www.figma.com/file/8xHaE8JAjJUw5Uaeqqb2Gl/PetBuddy--mockup?node-id=0%3A1">COLOR PALETTe
+</a>
+
 
 ## Features
 
