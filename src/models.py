@@ -82,7 +82,6 @@ class Review(db.Model):
     review = db.Column(db.Float())
     comment = db.Column(db.Text(), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
-   
     users= db.relationship("User",
                     secondary=association_table_review,
                     back_populates="review") 
@@ -101,7 +100,7 @@ class Services(db.Model):
 class Commerce(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-        service = db.Column(db.Enum("Paseador", "Canguro", "Adiestrador", "Aseo"))
+        service = db.Column(db.String(255))
         description = db.Column(db.Text(), nullable=False)
         url = db.Column(db.String(255))
         image = db.Column(db.String(255))
