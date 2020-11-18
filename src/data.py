@@ -1,6 +1,6 @@
 #Crear objeto 
 
-users_seeds = [            
+users_seeds : [            
     {                
     "id" : 1,
     'email': 'carlosjuan1812@gmail.com'

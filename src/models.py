@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, Date
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, Date, Boolean
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -42,8 +42,8 @@ class User(db.Model):
 
 
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+    # def __repr__(self):
+    #     return '<User %r>' % self.username
 
     def serialize(self):
         return {
@@ -51,6 +51,15 @@ class User(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
+    def create_user(self):
+        db.session.add(self)
+        db.session.commit()
+    # def read_user():
+
+    # def update_user():
+
+    # def delete_user():
+
 
 class Animals(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,6 +84,14 @@ class Animals(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
+    def create_user(self):
+        db.session.add(self)
+        db.session.commit()
+    # def read_user():
+
+    # def update_user():
+
+    # def delete_user():
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -84,7 +101,15 @@ class Review(db.Model):
     date = db.Column(db.DateTime, nullable=False)
     users= db.relationship("User",
                     secondary=association_table_review,
-                    back_populates="review") 
+                    back_populates="review")
+    def create_user(self):
+        db.session.add(self)
+        db.session.commit()
+    # def read_user():
+
+    # def update_user():
+
+    # def delete_user():
 
 class Services(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -95,17 +120,33 @@ class Services(db.Model):
     schedule = db.Column(db.String(255), nullable=False)
     users = db.relationship("User",
                  secondary=association_table_services,
-               back_populates="patata") 
+               back_populates="patata")
+    def create_user(self):
+        db.session.add(self)
+        db.session.commit()
+    # def read_user():
+
+    # def update_user():
+
+    # def delete_user():
 
 class Commerce(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-        service = db.Column(db.String(255))
-        description = db.Column(db.Text(), nullable=False)
-        url = db.Column(db.String(255))
-        image = db.Column(db.String(255))
-        schedule = db.Column(db.String(255), nullable=False)
-        address = db.Column(db.String(255), nullable=False)
-        review = db.relationship("Review", lazy=True)
-        
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    service = db.Column(db.String(255))
+    description = db.Column(db.Text(), nullable=False)
+    url = db.Column(db.String(255))
+    image = db.Column(db.String(255))
+    schedule = db.Column(db.String(255), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    review = db.relationship("Review", lazy=True)
+    def create_user(self):
+        db.session.add(self)
+        db.session.commit()
+    # def read_user():
+
+    # def update_user():
+
+    # def delete_user():
+
 
