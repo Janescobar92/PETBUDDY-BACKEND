@@ -4,7 +4,6 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-
 association_table_services = db.Table('User_Services', db.Model.metadata,
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("service_id", db.Integer, db.ForeignKey("services.id")),
@@ -51,9 +50,11 @@ class User(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
-    def create_user(self):
+
+    def create(self):
         db.session.add(self)
         db.session.commit()
+
     # def read_user():
 
     # def update_user():
