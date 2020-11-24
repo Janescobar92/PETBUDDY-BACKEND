@@ -27,6 +27,17 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
+@app.route('/register', methods=['POST'])
+def create_user():
+    body=request.get_json()
+    try:
+        # if body is None:
+            # return "Body content is missing", 400
+        new_user= User(user_id= user_id, name= username, email=email, last_name=last_name, phone= phone, location= location, biografy = biografy )
+        new_user.add_user()
+        return jsonify(new_user.serialize()), 200
+    except:
+        return "Couldn't create the user",409
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

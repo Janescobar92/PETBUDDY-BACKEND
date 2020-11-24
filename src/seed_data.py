@@ -1,16 +1,15 @@
 data = {
     "User": [
         {
-            "id" : 1,
+            "id": 1,
             "email": "carlosjuan1812@gmail.com",
             "password": "123456",
-            "is_active" : True,
-            "name" : "Juan Carlos",
-            "last_name" : "Alcalde",
-            "phone" : "605143832",
-            "location" : "calle Alberto Conti",
-            "biografy" : "Me gustan los perros",
-            "image" : None,
+            "is_active": True,
+            "name": "Juan Carlos",
+            "last_name": "Alcalde",
+            "phone": "605143832",
+            "location": "calle Alberto Conti",
+            "biografy": "Me gustan los perros",
         },
         {
             "id" : 2,
@@ -21,7 +20,7 @@ data = {
             "last_name" : 'Mantovani',
             "phone" : "6051",
             "location" : "calle alcorcon",
-            "biografy" : "Me gusta los gatos",
+            "biografy" : "Me gustan los gatos",
             "image" : None,
         },
         {
@@ -31,26 +30,24 @@ data = {
             "is_active" : True,
             "name" : "Jan ",
             "last_name" : 'Escobar',
-            "phone" : "605146425",
+            "phone" : "672226555",
             "location" : "calle escorial",
-            "biografy" : "Me gusta los conejos",
-            "image" : None,
+            "biografy" : "Me gustan los conejos",
         },
     ],
      "Animals":[
             {
-                "id" : 1,
-                "user_id" : 1,
-                "name" : "Pluto",
-                "image" : None,
-                "animal_type" : "perro",
-                "age" : 3,
-                "personality" : "amigable",
-                "sex" : True,
-                "weight" : 20.00,
-                "size" : 40.00,
-                "diseases" : "no lo se",
-                "sterilized" : True,
+                "id": 1,
+                "user_id": 1,
+                "name": "Pluto",
+                "animal_type": "perro",
+                "age": 3,
+                "personality": "amigable",
+                "gender": True,
+                "weight": 20.00,
+                "size": 40.00,
+                "diseases": "no lo se",
+                "sterilized": True,
             },
             {
                 "id" : 2,
@@ -60,7 +57,7 @@ data = {
                 "animal_type" : "perro",
                 "age" : 6,
                 "personality" : "amigable",
-                "sex" : True,
+                "gender" : True,
                 "weight" : 20.00,
                 "size" : 40.00,
                 "diseases" : "no lo se",
@@ -74,7 +71,7 @@ data = {
                 "animal_type" : "perro",
                 "age" : 2,
                 "personality" : "jugueton",
-                "sex" : True,
+                "gender" : True,
                 "weight" : 20.00,
                 "size" : 40.00,
                 "diseases" : "no lo se",
@@ -83,40 +80,46 @@ data = {
         ],
     "Services":[
         {
-            "id" : 1,
-            "service" : "Paseador",
-            "description" : "blanvjvjsjd",
-            "price" : 20.00,
-            "image" : None,
-            "schedule":"fecha"
+            "id": 1,
+            "id_service_type": 1,
+            "id_user_offer": 2,
+            "description": "Soy buen adiestrador",
+            "price_h": 20.00
         },
         {
-            "id" : 2,
-            "service" :  "Adiestrador",
-            "description" : "blanvjvjsjd",
-            "price" : 20.00,
-            "image" : None,
-            "schedule":"fecha"
-        }
-    ],
-    "Commerce": [
-        {
-            "id" : 1,
-            "user_id" : 1,
-            "description" : "grdgdvdvtf",
-            "url" : None,
-            "image" : None,
-            "schedule" : "de 2 a 6",
-            "address" : "calle me da igual"
+            "id": 2,
+            "id_service_type": 2,
+            "id_user_offer": 1,
+            "description": "Lo paso genial en compañia de mascotas",
+            "price_h": 20.00
         }
     ],
     "Review":[
         {
             "id" : 1,
-            "comerce_id" : 1,
-            "review" : 3,   #Cambiar a entro y el nombre
-            "comment" : "hola",
-            "date" : "20 febrero 2016",
+            "id_user_author" : 1,
+            "points" : 3.00,   
+            "text" : "hola",
+        }
+    ],
+    "Operations":[
+        {
+            "id": 1,
+            "user_id_who_hire": 1,
+            "service_id_hired": 2,
+            "date": "1992-11-18",
+            "hired_time": 3,
+            "total_price": 20.00
+        }
+    ],
+    "Service_type":[
+        {
+            "id": 1,
+            "service_type": "paseador"
+        },
+        {
+            "id": 2,
+            "service_type": "canguro"
         }
     ]
 }
