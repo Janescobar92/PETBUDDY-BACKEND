@@ -114,7 +114,7 @@ class Review(db.Model):
     points = db.Column(db.Float())
     text = db.Column(db.Text(), nullable=False)
     # date = db.Column(db.DateTime, nullable=False)
-    review_type = Column(Enum("comercio","usuario"), nullable=False)
+    review_type = Column(Enum("commerce_review","user_review"), nullable=False)
     
     __mapper_args__ = {
         'polymorphic_identity': 'review',

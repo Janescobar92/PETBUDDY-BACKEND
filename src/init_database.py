@@ -36,3 +36,4 @@ def load_seed_data(data):
         for row in rows:
             new_row = ModelClass(**row)
             models.db.session.merge(new_row)
+    models.db.session.commit()
