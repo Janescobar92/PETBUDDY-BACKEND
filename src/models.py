@@ -49,9 +49,16 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
+    # def __repr__(self):
+    #     return '<User %r>' % self.username
+
     def create_user(self):
-        db.session.add(self)
-        db.session.commit()
+        try:
+            print(self,"DEVUELVE EL OBJETO USER")
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
     # def read_user():
 

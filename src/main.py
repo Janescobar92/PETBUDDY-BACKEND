@@ -9,9 +9,9 @@ from flask_cors import CORS
 
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db
-
+from models import db, User
 from init_database import init_db
+
 
 app = Flask(__name__)
 app.app_context().push()
@@ -31,10 +31,8 @@ app.cli.add_command(init_db)
 def create_user():
     body=request.get_json()
     try:
-        # if body is None:
-            # return "Body content is missing", 400
-        new_user= User(user_id= user_id, name= username, email=email, last_name=last_name, phone= phone, location= location, biografy = biografy )
-        new_user.add_user()
+        new_user= User(email=body["email"], password=body["password"], is_active=body["is_active"], name=body["name"], last_name=body["last_name"], phone=body["phone"], location=body["location"], biografy=body["biografy"])
+        new_user.create_user()
         return jsonify(new_user.serialize()), 200
     except:
         return "Couldn't create the user",409
