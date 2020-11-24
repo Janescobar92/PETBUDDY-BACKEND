@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, Datetime, Boolean, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, DateTime, Boolean, Text
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -10,7 +10,7 @@ class Operations(db.Model):
     id = db.Column(Integer, primary_key=True)
     user_id_who_hire = Column(Integer, ForeignKey("user.id"), primary_key=True)
     service_id_hired = Column(Integer, ForeignKey("services.id"), primary_key=True)
-    date = Column(Datetime(), nullable=False)
+    date = Column(DateTime(), nullable=False)
     hired_time = Column(Integer, nullable=False)
     total_price= Column(Float(), nullable= False)
     # realtionships
@@ -99,13 +99,7 @@ class Review(db.Model):
     id_user_author =  db.Column(db.Integer, db.ForeignKey("user.id"))
     points = db.Column(db.Float())
     text = db.Column(db.Text(), nullable=False)
-    # date = db.Column(db.DateTime, nullable=False)
-    review_type = Column(Enum("commerce_review","user_review"), nullable=False)
     
-    __mapper_args__ = {
-        'polymorphic_identity': 'review',
-        'polymorphic_on': review_type
-    }
     # def create_user(self):
     #     db.session.add(self)
     #     db.session.commit()
@@ -114,16 +108,6 @@ class Review(db.Model):
     # def update_user():
 
     # def delete_user():
-
-class User_review(Review):
-    __tablename__= "user_review"
-    id_review = db.Column(db.Integer, db.ForeignKey("review.id"), primary_key=True)
-    id_user_destination = Column(Integer, ForeignKey('user.id'), primary_key=True)
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'user_review'
-    }
-
 
 class Services(db.Model):
     __tablename__= "services"

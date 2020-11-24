@@ -81,25 +81,17 @@ data = {
     "Services":[
         {
             "id": 1,
-            "service": "Paseador",
+            "id_service_type": 1,
+            "id_user_offer": 2,
             "description": "Soy buen adiestrador",
-            "price": 20.00,
+            "price_h": 20.00,
         },
         {
-            "id" : 2,
-            "service" :  "Adiestrador",
-            "description" : "Me gustan los animales siempre que esten bien educados",
-            "price" : 20.00,
-            "image" : None,
-        }
-    ],
-    "Commerce": [
-        {
-            "id" : 1,
-            "user_id" : 1,
-            "description" : "Veterinaria",
-            "schedule" : "de 2 a 6",
-            "address" : "calle me da igual"
+            "id": 2,
+            "id_service_type": 2,
+            "id_user_offer": 1,
+            "description": "Soy buen adiestrador",
+            "price_h": 20.00,
         }
     ],
     "Review":[
@@ -108,31 +100,26 @@ data = {
             "id_user_author" : 1,
             "points" : 3.00,   
             "text" : "hola",
-            # "date" : "20 febrero 2016",
-            "review_type": "comercio"
         }
     ],
-    # "Operations":[
-    #     {
-    #         "id": 1,
-    #         "user_id": 1,
-    #         "service_id": 1,
-    #         "service": "Pasear",
-    #         "date": "18/nov",
-    #         "price": 20.00
-    #     }
-    # ],
-    # "User_review": [
-    #     {
-    #         "id": 1,
-    #         "id_user_destination": 1
-    #     }
-    # ],
-    # "Commerce_review": [
-    #     {
-    #         "id": 1,
-    #         "id_commerce_destination": 1
-    #     }
-    # ]
+    "Operations":[
+        {
+            "id": 1,
+            "user_id_who_hire": 1,
+            "service_id_hired": 2,
+            "date": "1992-11-18",
+            "price": 20.00
+        }
+    ],
+    "Service_type":[
+        {
+            "id": 1,
+            "service_type": "paseador"
+        },
+        {
+            "id": 2,
+            "service_type": "canguro"
+        }
+    ]
 }
 
