@@ -78,22 +78,22 @@ data = {
                 "sterilized" : True,
             }
         ],
-    "Services":[
-        {
-            "id": 1,
-            "id_service_type": 1,
-            "id_user_offer": 2,
-            "description": "Soy buen adiestrador",
-            "price_h": 20.00
-        },
-        {
-            "id": 2,
-            "id_service_type": 2,
-            "id_user_offer": 1,
-            "description": "Lo paso genial en compañia de mascotas",
-            "price_h": 20.00
-        }
-    ],
+    # "Services":[
+    #     {
+    #         "id": 1,
+    #         "id_service_type": 1,
+    #         "id_user_offer": 2,
+    #         "description": "Soy buen adiestrador",
+    #         "price_h": 20.00
+    #     },
+    #     {
+    #         "id": 2,
+    #         "id_service_type": 2,
+    #         "id_user_offer": 1,
+    #         "description": "Lo paso genial en compañia de mascotas",
+    #         "price_h": 20.00
+    #     }
+    # ],
     "Review":[
         {
             "id" : 1,
@@ -101,26 +101,26 @@ data = {
             "points" : 3.00,   
             "text" : "hola",
         }
-    ],
-    "Operations":[
-        {
-            "id": 1,
-            "user_id_who_hire": 1,
-            "service_id_hired": 2,
-            "date": "1992-11-18",
-            "hired_time": 3,
-            "total_price": 20.00
-        }
-    ],
-    "Service_type":[
-        {
-            "id": 1,
-            "service_type": "paseador"
-        },
-        {
-            "id": 2,
-            "service_type": "canguro"
-        }
     ]
+    # "Operations":[
+    #    {
+    #         "id": 1,
+    #         "user_id_who_hire": 1,
+    #         "service_id_hired": 2,
+    #         "date": "1992-11-18",
+    #         "hired_time": 3,
+    #         "total_price": 20.00
+    #     }
+    #  ]
+    # "Service_type":[
+    #     {
+    #         "id": 1,
+    #         "service_type": "paseador"
+    #     },
+    #     {
+    #         "id": 2,
+    #         "service_type": "canguro"
+    #     }
+    # ]
 }
 

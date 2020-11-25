@@ -26,8 +26,8 @@ class User(db.Model):
     is_active = Column(Boolean(False), nullable=False)
     name = Column(String(200), nullable=False)
     last_name = Column(String(200), nullable=False)
-    phone = Column(String(30), unique=True, nullable=False)
-    location = Column(String(255), nullable=False)
+    phone = Column(String(30), unique=True)
+    location = Column(String(255))
     biografy = Column(Text())
     image = Column(Text())
     # realtionships
