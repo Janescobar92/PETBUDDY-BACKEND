@@ -26,8 +26,8 @@ class User(db.Model):
     is_active = Column(Boolean(False), nullable=False)
     name = Column(String(200), nullable=False)
     last_name = Column(String(200), nullable=False)
-    phone = Column(String(30), unique=True, nullable=False)
-    location = Column(String(255), nullable=False)
+    phone = Column(String(30), unique=True)
+    location = Column(String(255))
     biografy = Column(Text())
     image = Column(Text())
     # realtionships
@@ -131,6 +131,12 @@ class Review(db.Model):
 
     # def delete_user():
 
+class Service_type(db.Model):
+    __tablename__="service_type"
+    id = Column(Integer, primary_key=True)
+    service_type_id = Column(String(255))
+    type_service = db.relationship('Services', lazy=True)
+
 class Services(db.Model):
     __tablename__= "services"
     id = Column(Integer, primary_key=True)
@@ -141,6 +147,7 @@ class Services(db.Model):
     # realtionships
     users_operations = db.relationship("Operations", back_populates="service_operations")
 
+
     def create_user(self):
         db.session.add(self)
         db.session.commit()
@@ -150,9 +157,5 @@ class Services(db.Model):
 
     # def delete_user():
 
-class Service_type(db.Model):
-    __tablename__="service_type"
-    id = Column(Integer, primary_key=True)
-    service_type = Column(String(255))
 
 
