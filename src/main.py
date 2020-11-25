@@ -9,7 +9,7 @@ from flask_cors import CORS
 
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Animals
 from init_database import init_db
 
 
@@ -36,6 +36,15 @@ def create_user():
         return jsonify(new_user.serialize()), 200
     except:
         return "Couldn't create the user",409
+
+@app.route('/user/<int:id_user>/pet', methods=['GET'])
+def read_user_pets(id_user):
+    try:
+        user_pets = Animals.read_pets(id_user)
+        return jsonify(user_pets), 200
+    except:
+        print("entro en except")
+        return "Couldn't find the pets",404
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
