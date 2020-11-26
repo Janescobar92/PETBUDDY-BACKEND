@@ -38,7 +38,7 @@ def create_user():
         return "Couldn't create the user",409
 
 @app.route('/user/<int:id_user>/pet', methods=['GET'])
-def read_user_pets(id_user):
+def read_pets_by_user(id_user):
     try:
         user_pets = Animals.read_pets(id_user)
         return jsonify(user_pets), 200
