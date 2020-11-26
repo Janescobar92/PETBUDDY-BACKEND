@@ -1,3 +1,4 @@
+from datetime import datetime
 data = {
     "User": [
         {
@@ -91,7 +92,7 @@ data = {
             "id": 1,
             "user_id_who_hire": 1,
             "service_id_hired": 2,
-            "date": "1992-11-18",
+            "date": datetime.now(),
             "hired_time": 3,
             "total_price": 20.00
         }

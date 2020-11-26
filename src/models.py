@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, DateTime, Boolean, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, DateTime, Boolean, Text, Date
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -10,7 +10,7 @@ class Operations(db.Model):
     id = db.Column(Integer, primary_key=True)
     user_id_who_hire = Column(Integer, ForeignKey("user.id"), primary_key=True)
     service_id_hired = Column(Integer, ForeignKey("services.id"), primary_key=True)
-    date = Column(DateTime(), nullable=False)
+    date = Column(db.Date, unique=False, nullable=False)
     hired_time = Column(Integer, nullable=False)
     total_price= Column(Float(), nullable= False)
     # realtionships
