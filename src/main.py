@@ -37,7 +37,7 @@ def create_user():
     try:
         hashed_password = generate_password_hash(body['password'], method='sha256')
         print(hashed_password,"estoy en hashedpassword register")
-        new_user= User(id=body["id"], email=body["email"], password=hashed_password, is_active=True, name=body["name"], last_name=body["last_name"], phone=body["phone"], location=body["location"], biografy=body["biografy"])
+        new_user= User( email=body["email"], password=hashed_password, is_active=True, name=body["name"], last_name=body["last_name"], phone=body["phone"], location=body["location"], biografy=body["biografy"])
         #, phone=body["phone"], location=body["location"], biografy=body["biografy"]
         print(new_user,"soy new user")
         new_user.create_user()
