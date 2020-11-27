@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Animals
 from init_database import init_db
 
 
@@ -35,11 +35,8 @@ app.cli.add_command(init_db)
 def create_user():
     body=request.get_json()
     try:
-        hashed_password = generate_password_hash(body['password'], method='sha256')
-        print(hashed_password,"estoy en hashedpassword register")
-        new_user= User( email=body["email"], password=hashed_password, is_active=True, name=body["name"], last_name=body["last_name"], phone=body["phone"], location=body["location"], biografy=body["biografy"])
-        #, phone=body["phone"], location=body["location"], biografy=body["biografy"]
-        print(new_user,"soy new user")
+        hashed_password = generate_password_hash(body['password'], method='sha256')    
+        new_user= User( email=body["email"], password=hashed_password, is_active=True, name=body["name"], last_name=body["last_name"])
         new_user.create_user()
         return jsonify(new_user.serialize()), 200
     except:
@@ -56,7 +53,7 @@ def login_user():
     user = User.query.filter_by(email=auth.username).first()   
         
     if check_password_hash(user.password, auth.password):  
-        token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])  
+        token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=500)}, app.config['SECRET_KEY'])  
         return jsonify({'token' : token.decode('UTF-8')}) 
 
     return make_response('could not verify',  401, {'WWW.Authentication': 'Basic realm: "login required"'})
@@ -65,7 +62,6 @@ def login_user():
 def get_all_users():  
     
     users = User.query.all() 
-    print(users,"estoy en get users")
     result = []   
 
     for user in users:   
@@ -79,6 +75,15 @@ def get_all_users():
         result.append(user_data)   
 
     return jsonify({'users': result})
+    
+@app.route('/user/<int:id_user>/pet', methods=['GET'])
+def read_pets_by_user(id_user):
+    try:
+        user_pets = Animals.read_pets(id_user)
+        return jsonify(user_pets), 200
+    except:
+        print("entro en except")
+        return "Couldn't find the pets",404
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

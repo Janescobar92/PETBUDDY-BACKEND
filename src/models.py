@@ -87,14 +87,29 @@ class Animals(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
-            "email": self.email,
+            "user_id": self.user_id,
+            "name": self.name,
+            "image": self.image,
+            "animal_type":self.animal_type,
+            "age":self.age,
+            "personality":self.personality,
+            "gender":self.gender,
+            "weight":self.weight,
+            "size":self.size,
+            "diseases":self.diseases,
+            "sterilized":self.sterilized
             # do not serialize the password, its a security breach
         }
-    def create_user(self):
+
+    def create_pet(self):
         db.session.add(self)
         db.session.commit()
-    # def read_user():
+
+    @classmethod 
+    def read_pets(cls, id_user):
+        pets  = Animals.query.filter_by(user_id = id_user)
+        all_pets = list(map(lambda x: x.serialize(), pets))
+        return all_pets
 
     # def update_user():
 
@@ -116,6 +131,12 @@ class Review(db.Model):
 
     # def delete_user():
 
+class Service_type(db.Model):
+    __tablename__="service_type"
+    id = Column(Integer, primary_key=True)
+    service_type_id = Column(String(255))
+    type_service = db.relationship('Services', lazy=True)
+
 class Services(db.Model):
     __tablename__= "services"
     id = Column(Integer, primary_key=True)
@@ -126,6 +147,7 @@ class Services(db.Model):
     # realtionships
     users_operations = db.relationship("Operations", back_populates="service_operations")
 
+
     def create_user(self):
         db.session.add(self)
         db.session.commit()
@@ -135,9 +157,5 @@ class Services(db.Model):
 
     # def delete_user():
 
-class Service_type(db.Model):
-    __tablename__="service_type"
-    id = Column(Integer, primary_key=True)
-    service_type = Column(String(255))
 
 
