@@ -46,20 +46,21 @@ def create_user():
 def login_user(): 
     body=request.get_json()
     # auth = request.authorization   
-    print(body["email"], "este es el BODY")
     # print(auth, "este es el AUTH")
-    if not body or not body["email"] or not body["password"]:  
-        return 'could not verify', 402, {'WWW.Authentication': 'Basic realm: "login required"'}    
 
-    user = User.query.filter_by(email=body["email"]).first()  
+    if "x-access-tokens" not in request.headers:
+        if not body or not body["email"] or not body["password"]:  
+            return 'could not verify', 402, {'WWW.Authentication': 'Basic realm: "login required"'}    
 
-    print(check_password_hash(user.password, body["password"])) 
-        
-    if check_password_hash(user.password, body["password"]):  
-        token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=500)}, app.config['SECRET_KEY'])  
-        return jsonify({'token' : token.decode('UTF-8')}) 
+        user = User.query.filter_by(email=body["email"]).first()  
+            
+        if check_password_hash(user.password, body["password"]):  
+            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=500)}, app.config['SECRET_KEY'])  
+            return jsonify({'token' : token.decode('UTF-8')}) 
 
-    return make_response('could not verify last',  401, {'WWW.Authentication': 'Basic realm: "login required"'})
+        return make_response('could not verify',  401, {'WWW.Authentication': 'Basic realm: "login required"'})
+    else:
+        return make_response("Token admited", 200)
 
 @app.route('/users', methods=['GET'])
 def get_all_users():  
