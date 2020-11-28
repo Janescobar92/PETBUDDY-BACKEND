@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Animals
+from models import db, User, Animals, Services
 from init_database import init_db
 
 
@@ -88,6 +88,15 @@ def read_pets_by_user(id_user):
     except:
         print("entro en except")
         return "Couldn't find the pets",404
+
+@app.route('/user/<int:id_user>/worked_for', methods=['GET'])
+def read_history(id_user):
+    # try:
+    my_previous_works = Services.read_service_ofered(id_user)
+    return jsonify(my_previous_works), 200
+    # except:
+        # print("entro en except")
+        # return "Couldn't find the pets",404
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

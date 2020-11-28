@@ -17,6 +17,12 @@ class Operations(db.Model):
     user_operation = db.relationship("User", back_populates="services_operation")
     service_operations = db.relationship("Services", back_populates="users_operations")
 
+    @classmethod
+    def read_operations(clss, id_user):
+        previous_contracts  = Operations.query.filter_by(user_id = id_user)
+        previous_contracts = list(map(lambda x: x.serialize(), pets))
+        return all_pets
+
 
 class User(db.Model):
     __tablename__= "user"
@@ -147,11 +153,23 @@ class Services(db.Model):
     # realtionships
     users_operations = db.relationship("Operations", back_populates="service_operations")
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "id_service_type": self.id_service_type,
+            "id_user_offer": self.id_user_offer,
+            "description": self.description,
+            "price_h": self.price_h
+        }
 
-    def create_user(self):
-        db.session.add(self)
-        db.session.commit()
-    # def read_user():
+    # def create_user(self):
+    #     db.session.add(self)
+    #     db.session.commit()
+    @classmethod
+    def read_service_ofered(clss, id_user):
+        service = Services.query.filter_by(id_user_offer = id_user)
+        all_user_services =  list(map(lambda x: x.serialize(), service))
+        return all_user_services
 
     # def update_user():
 
