@@ -104,6 +104,7 @@ class Animals(db.Model):
 
     def serialize(self):
         return {
+            "id":self.id,
             "user_id": self.user_id,
             "name": self.name,
             "image": self.image,
@@ -118,7 +119,7 @@ class Animals(db.Model):
             # do not serialize the password, its a security breach
         }
 
-    def create_pet(self):
+    def create_user_pet(self):
         db.session.add(self)
         db.session.commit()
 
@@ -128,7 +129,21 @@ class Animals(db.Model):
         all_pets = list(map(lambda x: x.serialize(), pets))
         return all_pets
 
-    # def update_user():
+    def update_pets(self, id_user, id, name, image, animal_type, age, personality, gender, weight, size, diseases, sterilized):
+        # name, image, animal_type, age, personality, gender, weight, size, diseases, sterilized
+        pet = Animals.query.filter_by(user_id = id_user, id = id).first()
+        pet.name = name
+        pet.image = image
+        pet.animal_type = animal_type
+        pet.age = age
+        pet.personality = personality
+        pet.gender = gender
+        pet.weight = weight
+        pet.size = size
+        pet.diseases = diseases
+        pet.sterilized = sterilized
+        db.session.commit()
+        
 
     # def delete_user():
 

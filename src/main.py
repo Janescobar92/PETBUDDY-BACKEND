@@ -80,24 +80,35 @@ def get_all_users():
 
     return jsonify({'users': result})
     
-@app.route('/user/<int:id_user>/pet', methods=['GET'])
-def read_pets_by_user(id_user):
+@app.route('/user/<int:id_user>/pet', methods=['POST'])
+# @token_required
+def create_user_pet(id_user):
+    body=request.get_json()
     try:
-        user_pets = Animals.read_pets(id_user)
-        return jsonify(user_pets), 200
+        new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = body["gender"] , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= body["sterilized"])
+        new_user_pet.create_pet()
+        return jsonify(new_user_pet.serialize()), 200
     except:
-        print("entro en except")
-        return "Couldn't find the pets",404
+        return "Couldn't create the pet",404
 
 @app.route('/user/<int:id_user>/pet', methods=['GET'])
-@token_required
 def read_pets_by_user(id_user):
     try:
         user_pets = Animals.read_pets(id_user)
         return jsonify(user_pets), 200
     except:
-        print("entro en except")
         return "Couldn't find the pets",404
+
+@app.route('/user/<int:id_user>/pet', methods=['PUT'])
+# @token_required
+def update_user_pet(id_user):
+    body=request.get_json()
+    try:
+        update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = body["gender"] , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= body["sterilized"])
+        update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], body["gender"], body["weight"], body["size"], body["diseases"], body["sterilized"])
+        return (update_pet.serialize())
+    except:
+        return "Couldn't update pet", 404
 
 @app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
 def read_history(id_user_param):
