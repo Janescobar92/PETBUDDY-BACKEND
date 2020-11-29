@@ -86,7 +86,7 @@ def create_user_pet(id_user):
     body=request.get_json()
     try:
         new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = body["gender"] , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= body["sterilized"])
-        new_user_pet.create_pet()
+        new_user_pet.create_user_pet()
         return jsonify(new_user_pet.serialize()), 200
     except:
         return "Couldn't create the pet",404
@@ -110,9 +110,18 @@ def update_user_pet(id_user):
     except:
         return "Couldn't update pet", 404
 
-@app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
-def read_history(id_user_param):
-    param = id_user_param
+@app.route('/user/<int:id_user>/<int:pet_id>', methods=['DELETE'])
+# @token_required
+def delete_user_pet(id_user, pet_id):
+    try:
+        deleted_pet = Animals.delete_pet(pet_id)
+        return "Pet deleted", 202
+    except:
+        return "Couldn't delete the pet", 409
+
+# @app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
+# def read_history(id_user_param):
+#     param = id_user_param
     # try:
 #  userList = users.query.join(friendships).add_columns(users.id, users.userName, users.userEmail, friendships.user_id, friendships.friend_id).filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
     # previous_works_table = User.query.join(Services).add_columns(User.image, User.name, User.id, Services.id, Services.id_user_offer).join

@@ -145,7 +145,10 @@ class Animals(db.Model):
         db.session.commit()
         
 
-    # def delete_user():
+    def delete_pet(pet_id):
+        pet = Animals.query.filter_by(id= pet_id)
+        pet.delete()
+        db.session.commit()
 
 class Review(db.Model):
     __tablename__= "review"
