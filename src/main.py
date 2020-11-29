@@ -10,7 +10,7 @@ import jwt
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from utils import APIException, generate_sitemap
+from utils import APIException, generate_sitemap, token_required
 from admin import setup_admin
 from models import db, User, Animals, Services, Operations, Service_type
 from init_database import init_db
@@ -81,6 +81,16 @@ def get_all_users():
     return jsonify({'users': result})
     
 @app.route('/user/<int:id_user>/pet', methods=['GET'])
+def read_pets_by_user(id_user):
+    try:
+        user_pets = Animals.read_pets(id_user)
+        return jsonify(user_pets), 200
+    except:
+        print("entro en except")
+        return "Couldn't find the pets",404
+
+@app.route('/user/<int:id_user>/pet', methods=['GET'])
+@token_required
 def read_pets_by_user(id_user):
     try:
         user_pets = Animals.read_pets(id_user)
