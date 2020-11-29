@@ -17,6 +17,12 @@ class Operations(db.Model):
     user_operation = db.relationship("User", back_populates="services_operation")
     service_operations = db.relationship("Services", back_populates="users_operations")
 
+    def read_operations():
+        operations = Operations.query.all()
+        all_user_operations =  list(map(lambda x: x.serialize(), operations))
+
+        return all_user_operations
+        
     def serialize(self):
         return {
             "id": self.id,
@@ -27,13 +33,9 @@ class Operations(db.Model):
             "total_price": self.total_price
         }
         
-    def read_operations():
-        operations = Operations.query.all()
-        all_user_operations =  list(map(lambda x: x.serialize(), operations))
 
-        return all_user_operations
-        
-        
+
+
 
 class User(db.Model):
     __tablename__= "user"
@@ -180,7 +182,7 @@ class Services(db.Model):
     def read_service_ofered(cls, id_user):
         service = Services.query.filter_by(id_user_offer = id_user)
         all_user_services =  list(map(lambda x: x.serialize(), service))
-        return all_user_services
+        return service
 
     # def update_user():
 
