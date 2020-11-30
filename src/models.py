@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, DateTime, Boolean, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Float, DateTime, Boolean, Text, Date
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -10,12 +10,31 @@ class Operations(db.Model):
     id = db.Column(Integer, primary_key=True)
     user_id_who_hire = Column(Integer, ForeignKey("user.id"), primary_key=True)
     service_id_hired = Column(Integer, ForeignKey("services.id"), primary_key=True)
-    date = Column(DateTime(), nullable=False)
+    date = Column(db.Date, unique=False, nullable=False)
     hired_time = Column(Integer, nullable=False)
     total_price= Column(Float(), nullable= False)
     # realtionships
     user_operation = db.relationship("User", back_populates="services_operation")
     service_operations = db.relationship("Services", back_populates="users_operations")
+
+    def read_operations():
+        operations = Operations.query.all()
+        all_user_operations =  list(map(lambda x: x.serialize(), operations))
+
+        return all_user_operations
+        
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id_who_hire": self.user_id_who_hire,
+            "service_id_hired": self.service_id_hired,
+            "date": self.date,
+            "hired_time": self.hired_time,
+            "total_price": self.total_price
+        }
+        
+
+
 
 
 class User(db.Model):
@@ -26,8 +45,8 @@ class User(db.Model):
     is_active = Column(Boolean(False), nullable=False)
     name = Column(String(200), nullable=False)
     last_name = Column(String(200), nullable=False)
-    phone = Column(String(30), unique=True, nullable=False)
-    location = Column(String(255), nullable=False)
+    phone = Column(String(30), unique=True)
+    location = Column(String(255))
     biografy = Column(Text())
     image = Column(Text())
     # realtionships
@@ -87,18 +106,19 @@ class Animals(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
-            "email": self.email,
+            "user_id": self.user_id,
+            "name": self.name,
+            "image": self.image,
+            "animal_type":self.animal_type,
+            "age":self.age,
+            "personality":self.personality,
+            "gender":self.gender,
+            "weight":self.weight,
+            "size":self.size,
+            "diseases":self.diseases,
+            "sterilized":self.sterilized
             # do not serialize the password, its a security breach
         }
-    def create_user(self):
-        db.session.add(self)
-        db.session.commit()
-    # def read_user():
-
-    # def update_user():
-
-    # def delete_user():
 
 class Review(db.Model):
     __tablename__= "review"
@@ -116,6 +136,12 @@ class Review(db.Model):
 
     # def delete_user():
 
+class Service_type(db.Model):
+    __tablename__="service_type"
+    id = Column(Integer, primary_key=True)
+    service_type_id = Column(String(255))
+    type_service = db.relationship('Services', lazy=True)
+
 class Services(db.Model):
     __tablename__= "services"
     id = Column(Integer, primary_key=True)
@@ -126,18 +152,21 @@ class Services(db.Model):
     # realtionships
     users_operations = db.relationship("Operations", back_populates="service_operations")
 
-    def create_user(self):
-        db.session.add(self)
-        db.session.commit()
-    # def read_user():
+    def serialize(self):
+        return {
+            "id": self.id,
+            "id_service_type": self.id_service_type,
+            "id_user_offer": self.id_user_offer,
+            "description": self.description,
+            "price_h": self.price_h
+        }
 
-    # def update_user():
+    def create_service(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
-    # def delete_user():
-
-class Service_type(db.Model):
-    __tablename__="service_type"
-    id = Column(Integer, primary_key=True)
-    service_type = Column(String(255))
 
 
