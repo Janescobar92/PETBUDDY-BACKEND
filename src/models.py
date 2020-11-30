@@ -163,7 +163,6 @@ class Services(db.Model):
 
     def create_service(self):
         try:
-            print(self,"DEVUELVE EL OBJETO USER")
             db.session.add(self)
             db.session.commit()
         except:

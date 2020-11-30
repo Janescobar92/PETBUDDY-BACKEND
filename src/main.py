@@ -35,7 +35,6 @@ app.cli.add_command(init_db)
 # @token_required
 def create_user_service(id_user):
     body=request.get_json()
-    print(body,"estoy en post service")
     try:
         new_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
         new_service.create_service()
