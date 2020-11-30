@@ -46,3 +46,7 @@ def read_user_services(id_user):
         return jsonify(user_services), 200
     except:
         return "Couldn't find the user services",404
+
+if __name__ == '__main__':
+    PORT = int(os.environ.get('PORT', 3000))
+    app.run(host='0.0.0.0', port=PORT, debug=False)
