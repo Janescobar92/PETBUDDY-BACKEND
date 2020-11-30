@@ -117,22 +117,7 @@ class Animals(db.Model):
             "size":self.size,
             "diseases":self.diseases,
             "sterilized":self.sterilized
-            # do not serialize the password, its a security breach
         }
-
-    def create_pet(self):
-        db.session.add(self)
-        db.session.commit()
-
-    @classmethod 
-    def read_pets(cls, id_user):
-        pets = Animals.query.filter_by(user_id = id_user)
-        all_pets = list(map(lambda x: x.serialize(),pets))
-        return all_pets
-
-    # def update_user():
-
-    # def delete_user():
 
 class Review(db.Model):
     __tablename__= "review"
@@ -140,15 +125,6 @@ class Review(db.Model):
     id_user_author =  db.Column(db.Integer, db.ForeignKey("user.id"))
     points = db.Column(db.Float())
     text = db.Column(db.Text(), nullable=False)
-    
-    # def create_user(self):
-    #     db.session.add(self)
-    #     db.session.commit()
-    # def read_user():
-
-    # def update_user():
-
-    # def delete_user():
 
 class Service_type(db.Model):
     __tablename__="service_type"
@@ -175,51 +151,19 @@ class Services(db.Model):
             "price_h": self.price_h
         }
 
-    # def create_user(self):
-    #     db.session.add(self)
-    #     db.session.commit()
-
-    def create_service(self):
-        try:
-            print(self,"DEVUELVE EL OBJETO USER")
-            db.session.add(self)
-            db.session.commit()
-        except:
-            db.session.rollback()
-
     @classmethod
     def read_all_services(cls):
         services = Services.query.all()
-        print(services,"estoy en models all services")
         all_services =  list(map(lambda x: x.serialize(), services))
-        print(all_services,"estoy en models all services 2")
         return all_services
 
     @classmethod 
     def read_user_services(cls, id_user):
         services  = Services.query.filter_by(id_user_offer = id_user)
-        print(services,"estoy en models")
         all_services = list(map(lambda x: x.serialize(), services))
-        print(all_services,"estoy en models 2")
         return all_services
 
-    @classmethod 
-    def update_services(clss, service_id, id_service_type, id_user_offer, description, price_h):
-        service = Services.query.filter_by(id_user_offer = id_user_offer, id_service_type = id_service_type).first()
-        print(service, "estoy en models update")
-        # service.id = service_id
-        service.id_service_type = id_service_type
-        #service.id_user_offer = id_user_offer
-        service.description = description
-        service.price_h = price_h
-        db.session.commit()
-    
-    @classmethod    
-    def delete_service(cls,id_user, id_service):
-        print("en models")
-        service = Services.query.filter_by(id_user_offer = id_user, id_service_type = id_service) 
-        service.delete()
-        db.session.commit()
+   
 
 
 
