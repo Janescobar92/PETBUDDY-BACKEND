@@ -33,18 +33,20 @@ app.cli.add_command(init_db)
 
 @app.route('/services', methods=['GET'])
 def get_all_services():  
-    try:
-        all_services = Services.read_all_services() 
+     
+    all_services = Services.read_all_services()
+    if all_services != None:
         return jsonify(all_services), 200
-    except:
+    else:
         return "Couldn't find the services",404
 
 @app.route('/user/<int:id_user>/service', methods=['GET'])
 def read_user_services(id_user):
-    try:  
-        user_services = Services.read_user_services(id_user)
+     
+    user_services = Services.read_user_services(id_user)
+    if user_services != None:
         return jsonify(user_services), 200
-    except:
+    else:
         return "Couldn't find the user services",404
 
 if __name__ == '__main__':
