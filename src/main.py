@@ -2,14 +2,17 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
-from flask import Flask, request, jsonify, url_for
+from flask import Flask, request, jsonify, url_for, make_response
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
+import jwt
+import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from utils import APIException, generate_sitemap
+from utils import APIException, generate_sitemap, token_required
 from admin import setup_admin
-from models import db, User
+from models import db, User, Animals, Services, Operations, Service_type
 from init_database import init_db
 
 
@@ -27,15 +30,24 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
-@app.route('/register', methods=['POST'])
-def create_user():
-    body=request.get_json()
-    try:
-        new_user= User(email=body["email"], password=body["password"], is_active=body["is_active"], name=body["name"], last_name=body["last_name"], phone=body["phone"], location=body["location"], biografy=body["biografy"])
-        new_user.create_user()
-        return jsonify(new_user.serialize()), 200
-    except:
-        return "Couldn't create the user",409
+
+@app.route('/services', methods=['GET'])
+def get_all_services():  
+     
+    all_services = Services.read_all_services()
+    if all_services != None:
+        return jsonify(all_services), 200
+    else:
+        return "Couldn't find the services",404
+
+@app.route('/user/<int:id_user>/service', methods=['GET'])
+def read_user_services(id_user):
+     
+    user_services = Services.read_user_services(id_user)
+    if user_services != None:
+        return jsonify(user_services), 200
+    else:
+        return "Couldn't find the user services",404
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
