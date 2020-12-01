@@ -123,7 +123,7 @@ def update_user_pet(id_user):
 def delete_user_pet(id_user, pet_id):
     try:
         deleted_pet = Animals.delete_pet(pet_id)
-        return "Pet deleted", 202
+        return jsonify(deleted_pet), 202
     except:
         return "Couldn't delete the pet", 409
 
