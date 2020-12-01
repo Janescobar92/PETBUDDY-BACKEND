@@ -77,7 +77,10 @@ class User(db.Model):
         except:
             db.session.rollback()
 
-    # def read_user():
+    @classmethod 
+    def read_user(cls, id_user):
+        user =   User.query.get(id_user)
+        return user
 
     # def update_user():
 

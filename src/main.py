@@ -10,7 +10,7 @@ import jwt
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from utils import APIException, generate_sitemap, token_required
+from utils import APIException, generate_sitemap, token_required, isTrue
 from admin import setup_admin
 from models import db, User, Animals, Services, Operations, Service_type
 from init_database import init_db
@@ -31,17 +31,6 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
-@app.route('/register', methods=['POST'])
-def create_user():
-    body=request.get_json()
-    try:
-        hashed_password = generate_password_hash(body['password'], method='sha256')
-        new_user= User( email=body["email"], password=hashed_password, is_active=True, name=body["name"], last_name=body["last_name"])
-        new_user.create_user()
-        return jsonify(new_user.serialize()), 200
-    except:
-        return "Couldn't create the user",401
-
 @app.route('/login', methods=['GET','POST'])  
 def login_user(): 
     body=request.get_json()
@@ -61,6 +50,25 @@ def login_user():
         return make_response('could not verify',  401, {'WWW.Authentication': 'Basic realm: "login required"'})
     else:
         return make_response("Token admited", 200)
+
+@app.route('/register', methods=['POST'])
+def create_user():
+    body=request.get_json()
+    try:
+        hashed_password = generate_password_hash(body['password'], method='sha256')
+        new_user= User( email=body["email"], password=hashed_password, is_active=True, name=body["name"], last_name=body["last_name"])
+        new_user.create_user()
+        return jsonify(new_user.serialize()), 200
+    except:
+        return "Couldn't create the user",401
+
+@app.route('/user/<int:id_user>', methods=['GET'])
+def read_loged_user(id_user):
+    try: 
+        user = User.read_user(id_user)
+        return jsonify(user.serialize()), 200
+    except:
+        return "Couldn't read user info", 401
 
 @app.route('/users', methods=['GET'])
 def get_all_users():  
@@ -84,12 +92,12 @@ def get_all_users():
 # @token_required
 def create_user_pet(id_user):
     body=request.get_json()
-    try:
-        new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = body["gender"] , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= body["sterilized"])
-        new_user_pet.create_user_pet()
-        return jsonify(new_user_pet.serialize()), 200
-    except:
-        return "Couldn't create the pet",404
+    # try:
+    new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+    new_user_pet.create_user_pet()
+    return jsonify(new_user_pet.serialize()), 200
+    # except:
+    #     return "Couldn't create the pet",404
 
 @app.route('/user/<int:id_user>/pet', methods=['GET'])
 def read_pets_by_user(id_user):
