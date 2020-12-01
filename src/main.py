@@ -45,8 +45,6 @@ def create_user():
 @app.route('/login', methods=['GET','POST'])  
 def login_user(): 
     body=request.get_json()
-    # auth = request.authorization   
-    # print(auth, "este es el AUTH")
 
     if "x-access-tokens" not in request.headers:
         if not body or not body["email"] or not body["password"]:  
@@ -86,7 +84,6 @@ def read_pets_by_user(id_user):
         user_pets = Animals.read_pets(id_user)
         return jsonify(user_pets), 200
     except:
-        print("entro en except")
         return "Couldn't find the pets",404
 
 @app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
