@@ -123,7 +123,7 @@ class Animals(db.Model):
         db.session.commit()
 
     @classmethod 
-    def read_pets(cls, id_user):
+    def read_pets_by_user(cls, id_user):
         pets  = Animals.query.filter_by(user_id = id_user)
         all_pets = list(map(lambda x: x.serialize(), pets))
         return all_pets
