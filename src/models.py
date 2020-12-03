@@ -84,8 +84,11 @@ class User(db.Model):
 
     # def update_user():
 
-    # def delete_user():
+    # def delete_user()
 
+ANIMALS_ENUM = ("perro", "gato", "conejo", "roedores", "aves")
+
+PETS_CHARACTER = ("amigable", "dominante", "nervioso", "agresivo", "jugueton")
 
 class Animals(db.Model):
     __tablename__="animals"
@@ -93,9 +96,9 @@ class Animals(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     name = db.Column(db.String(200), nullable=False)
     image = db.Column(db.Text())
-    animal_type = db.Column(db.Enum("perro", "gato", "conejo", "roedores", "aves"), nullable=False)
+    animal_type = db.Column(db.Enum(*ANIMALS_ENUM), nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    personality = db.Column(db.Enum("amigable", "dominante", "nervioso", "agresivo", "jugueton"), nullable=False)
+    personality = db.Column(db.Enum(*PETS_CHARACTER), nullable=False)
     gender = db.Column(db.Boolean(False), nullable=True)  #Preguntar si poner mejor enum(array)
     weight = db.Column(db.Float(), nullable=False)
     size = db.Column(db.Float(), nullable=False)

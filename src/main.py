@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from utils import APIException, generate_sitemap, token_required, isTrue
 from admin import setup_admin
-from models import db, User, Animals, Services, Operations, Service_type
+from models import db, User, Animals, Services, Operations, Service_type, ANIMALS_ENUM, PETS_CHARACTER
 from init_database import init_db
 
 
@@ -70,6 +70,15 @@ def read_loged_user(id_user):
     except:
         return "Couldn't read user info", 401
 
+@app.route('/user/<int:id_user>', methods=['PUT'])
+def update_loged_user(id_user):
+    body=request.get_json() 
+    try: 
+        update_user = User.update_user(id_user)
+        return jsonify(update_user.serialize()), 200
+    except:
+        return "Couldn't read user info", 401
+
 @app.route('/users', methods=['GET'])
 def get_all_users():  
     
@@ -92,12 +101,12 @@ def get_all_users():
 # @token_required
 def create_user_pet(id_user):
     body=request.get_json()
-    # try:
-    new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
-    new_user_pet.create_user_pet()
-    return jsonify(new_user_pet.serialize()), 200
-    # except:
-    #     return "Couldn't create the pet",404
+    try:
+        new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+        new_user_pet.create_user_pet()
+        return jsonify(new_user_pet.serialize()), 200
+    except:
+        return "Couldn't create the pet",404
 
 @app.route('/user/<int:id_user>/pet', methods=['GET'])
 def read_pets_by_user(id_user):
@@ -111,12 +120,12 @@ def read_pets_by_user(id_user):
 # @token_required
 def update_user_pet(id_user):
     body=request.get_json()
-    # try:
-    update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
-    update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], isTrue(body["gender"]), body["weight"], body["size"], body["diseases"], isTrue(body["sterilized"]))
-    return (update_pet.serialize())
-    # except:
-    #     return "Couldn't update pet", 404
+    try:
+        update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+        update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], isTrue(body["gender"]), body["weight"], body["size"], body["diseases"], isTrue(body["sterilized"]))
+        return (update_pet.serialize())
+    except:
+        return "Couldn't update pet", 404
 
 @app.route('/user/<int:id_user>/<int:pet_id>', methods=['DELETE'])
 # @token_required
@@ -126,6 +135,20 @@ def delete_user_pet(id_user, pet_id):
         return jsonify(deleted_pet), 202
     except:
         return "Couldn't delete the pet", 409
+
+@app.route('/animals_type', methods=['GET'])
+def read_animals_type():
+    try:
+        return jsonify(ANIMALS_ENUM), 202
+    except:
+        return "Couldn't get animal_enum", 409
+
+@app.route('/pets_character', methods=['GET'])
+def read_pets_character():
+    try:
+        return jsonify(PETS_CHARACTER), 202
+    except:
+        return "Couldn't get pets_character", 409
 
 # @app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
 # def read_history(id_user_param):
