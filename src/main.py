@@ -100,10 +100,17 @@ def get_all_services():
 def read_user_services(id_user):
     try:  
         user_services = Services.read_user_services(id_user)
-        print(user_services, "estoy en main 2")
         return jsonify(user_services), 200
     except:
         return "Couldn't find the user services",404
+
+@app.route('/user/<int:id_user>/service_disabled', methods=['GET'])
+def read_user_services_disabled(id_user):
+    try:  
+        user_services = Services.read_user_services_disabled(id_user)
+        return jsonify(user_services), 200
+    except:
+        return "Couldn't find the user services disabled",404
 
 @app.route('/user/<int:id_user>/service', methods=['POST'])
 # @token_required
@@ -111,7 +118,7 @@ def create_user_service(id_user):
     body=request.get_json()
     print(body,"estoy en post service")
     try:
-        new_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
+        new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
         new_service.create_service()
         return jsonify(new_service.serialize()), 200
     except:
@@ -122,22 +129,24 @@ def create_user_service(id_user):
 def update_user_service(id_user):
     body=request.get_json()
     print(body,"estoy en put service")
-    try:
-        update_service= Services(id=body["id"], id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
-        print(update_service,"estoy en updateservice 1aaaaaaa")
-        update_service.update_services(body["id"], body["id_service_type"], id_user, body["description"], body["price_h"])
-        print(update_service,"estoy en updateservice bbbbbbb")
-        return jsonify(update_service.serialize()), 200
-    except:
-        return "Couldn't update the service",404
+    
+    update_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
+    print(update_service,"estoy en updateservice 1aaaaaaa")
+    update_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"])
+    print(update_service,"estoy en updateservice bbbbbbb")
+    return jsonify(update_service.serialize()), 200
+    # except:
+    #     return "Couldn't update the service",404
 
 @app.route('/user/<int:id_user>/<int:id_service_type>', methods=['DELETE'])
 # @token_required
 def delete_user_service(id_user, id_service_type):
     # try:
-    #print(id_service,"en main deleted")
+    print(id_service_type,"en main deleted")
+   
     deleted_service = Services.delete_service(id_user,id_service_type)
-    return "Service deleted successfully", 202
+    print(deleted_service, "en main deleeted")
+    return jsonify(deleted_service.serialize()), 202
     # except:
     #     return "Couldn't delete the service", 409
 

@@ -160,6 +160,7 @@ class Services(db.Model):
     __tablename__= "services"
     id = Column(Integer, primary_key=True)
     id_service_type = Column(Integer, ForeignKey("service_type.id"))
+    is_active = db.Column(db.Boolean(True))
     id_user_offer = Column(Integer, ForeignKey("user.id"))
     description = Column(Text(), nullable=False)
     price_h = Column(Float(),nullable=False)
@@ -170,6 +171,7 @@ class Services(db.Model):
         return {
             "id": self.id,
             "id_service_type": self.id_service_type,
+            "is_active": self.is_active,
             "id_user_offer": self.id_user_offer,
             "description": self.description,
             "price_h": self.price_h
@@ -189,7 +191,7 @@ class Services(db.Model):
 
     @classmethod
     def read_all_services(cls):
-        services = Services.query.all()
+        services = cls.query.filter_by(is_active = True)
         print(services,"estoy en models all services")
         all_services =  list(map(lambda x: x.serialize(), services))
         print(all_services,"estoy en models all services 2")
@@ -197,19 +199,22 @@ class Services(db.Model):
 
     @classmethod 
     def read_user_services(cls, id_user):
-        services  = Services.query.filter_by(id_user_offer = id_user)
-        print(services,"estoy en models")
+        services  = cls.query.filter_by(id_user_offer = id_user,is_active = True)
         all_services = list(map(lambda x: x.serialize(), services))
-        print(all_services,"estoy en models 2")
         return all_services
 
     @classmethod 
-    def update_services(clss, service_id, id_service_type, id_user_offer, description, price_h):
-        service = Services.query.filter_by(id_user_offer = id_user_offer, id_service_type = id_service_type).first()
+    def read_user_services_disabled(cls, id_user):
+        services  = cls.query.filter_by(id_user_offer = id_user,is_active = False)
+        all_services = list(map(lambda x: x.serialize(), services))
+        return all_services
+
+    @classmethod 
+    def update_services(clss, id_service_type, id_user_offer, description, price_h):
+        service = clss.query.filter_by(id_user_offer = id_user_offer, id_service_type = id_service_type).first()
         print(service, "estoy en models update")
-        # service.id = service_id
-        service.id_service_type = id_service_type
-        #service.id_user_offer = id_user_offer
+        # service.id_service_type = id_service_type
+        service.is_active = True
         service.description = description
         service.price_h = price_h
         db.session.commit()
@@ -217,9 +222,14 @@ class Services(db.Model):
     @classmethod    
     def delete_service(cls,id_user, id_service):
         print("en models")
-        service = Services.query.filter_by(id_user_offer = id_user, id_service_type = id_service) 
-        service.delete()
+        service = cls.query.filter_by(id_user_offer = id_user, id_service_type = id_service).first()
+        # service.delete()
+        
+        service.is_active = False
         db.session.commit()
-
+       
+        print(service.is_active, "estoy en delete models")
+        
+        return service
 
 

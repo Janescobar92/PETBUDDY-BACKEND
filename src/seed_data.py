@@ -123,6 +123,7 @@ data = {
         {
             "id": 1,
             "id_service_type": 1,
+            "is_active" : True,
             "id_user_offer": 2,
             "description": "Soy buen adiestrador",
             "price_h": 20.00
@@ -130,6 +131,7 @@ data = {
         {
             "id": 2,
             "id_service_type": 2,
+            "is_active" : True,
             "id_user_offer": 1,
             "description": "Lo paso genial en compañia de mascotas",
             "price_h": 20.00
