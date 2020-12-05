@@ -26,12 +26,18 @@ class Operations(db.Model):
             "hired_time": self.hired_time,
             "total_price": self.total_price
         }
-        
-    def read_operations():
-        operations = Operations.query.all()
-        all_user_operations =  list(map(lambda x: x.serialize(), operations))
 
-        return all_user_operations
+    @classmethod
+    def read_service_hired(cls, id_user):
+        history_services_hired = cls.query.filter_by(user_id_who_hire= id_user)
+        all_history_services_hired =  list(map(lambda x: x.serialize(), history_services_hired))
+        all_hired_data= []
+        for eachOperation in all_history_services_hired:
+            user_offer_values = Services.getIdUserOffer(eachOperation["service_id_hired"])
+            hired_data = {**eachOperation, **user_offer_values}
+            all_hired_data.append(hired_data)
+            
+        return all_hired_data
     
     def getOperations(param_id):
         historic_operations = Operations.query.filter_by(service_id_hired= param_id)
@@ -238,8 +244,8 @@ class Services(db.Model):
     #     db.session.add(self)
     #     db.session.commit()
     @classmethod
-    def read_service_ofered(cls, id_user_param):
-        history_services = cls.query.filter_by(id_user_offer= id_user_param)
+    def read_service_ofered(cls, id_user):
+        history_services = cls.query.filter_by(id_user_offer= id_user)
         all_history_services = list(map(lambda x: x.serialize(), history_services))
 
         for eachservice in all_history_services:
@@ -255,5 +261,17 @@ class Services(db.Model):
 
     # def delete_user():
 
+    def getIdUserOffer(id_param):
+        historic_hired = Services.query.filter_by(id= id_param)
+        all_historic_services_hired = list(map(lambda x: x.serialize(), historic_hired))
+        
+        result = {}
 
+        for eachService in all_historic_services_hired:
+            print(all_historic_services_hired,"print del sols servicios")
+            user_offer = User.getUserWhoHired(eachService["id_user_offer"])
+            service_type = Service_type.getServiceTypeValue(eachService["id_service_type"])
+            result = {"name":user_offer,  "service": service_type}
+
+        return result
 

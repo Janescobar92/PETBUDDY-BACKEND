@@ -151,12 +151,20 @@ def read_pets_character():
         return "Couldn't get pets_character", 409
 
 @app.route('/user/workedfor/<int:id_user_param>', methods=['GET'])
-def read_history(id_user_param):
+def read_history_workedfor(id_user_param):
     try:
         history_service = Services.read_service_ofered(id_user_param)
         return jsonify(history_service), 200
     except:
         return "Couldn't find  history", 409
+
+@app.route('/user/hired/<int:id_user>', methods=['GET'])
+def read_history_hired(id_user):
+    # try:
+    history_service_hired = Operations.read_service_hired(id_user)
+    return jsonify(history_service_hired), 200
+    # except:
+    #     return "Couldn't find  history", 409
 
 
 if __name__ == '__main__':
