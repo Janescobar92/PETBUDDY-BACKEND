@@ -150,47 +150,14 @@ def read_pets_character():
     except:
         return "Couldn't get pets_character", 409
 
-# @app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
-# def read_history(id_user_param):
-#     param = id_user_param
-    # try:
-#  userList = users.query.join(friendships).add_columns(users.id, users.userName, users.userEmail, friendships.user_id, friendships.friend_id).filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-    # previous_works_table = User.query.join(Services).add_columns(User.image, User.name, User.id, Services.id, Services.id_user_offer).join
-    #  query = session.query(User, Document, DocumentsPermissions).join(Document).join(DocumentsPermissions)
-    # previous_works_query = db.session.query(Services).join(User).join(Operations).join(Service_type).add_columns(User.image, User.name, User.id, Services.id, Services.id_user_offer, Operations.id, Operations.date, Operations.hired_time, Operations.service_id_hired, Operations.total_price, Operations.user_id_who_hire, Service_type.id, Service_type.service_type_id).filter(Services.id_user_offer == param)
-    # def serialize():
-    #     return {
-    #         "user_who_hired": 
-    #     }
-        
-    # print(previous_works_query)
+@app.route('/user/workedfor/<int:id_user_param>', methods=['GET'])
+def read_history(id_user_param):
+    try:
+        history_service = Services.read_service_ofered(id_user_param)
+        return jsonify(history_service), 200
+    except:
+        return "Couldn't find  history", 409
 
-    # previous_works = []
-    # for each_work in previous_works_query:
-    #     print("HEEEELLLOOOOOOOOOOOOOOOOOOOOOOOOOO", each_work)
-    #     if each_work["operations_user_id_who_hire"] == each_work["user_id"]:
-    #         if each_work["operations_service_id_hired"] == each_work["services_id"] and each_work["services_id_service_type"] == each_work["service_type_service_type_id"]:
-    #             works = {}
-    #             works["user_who_hire"] = each_work["user_name"]
-    #             works["service_type"] = each_work["service_type_service_type_id"]
-
-
-    #             previous_works.append(works)
-
-    # return previous_works
-        
-    # services = Services.read_service_ofered(id_user)
-    # operations = Operations.read_operations()
-    # my_previous_works=[]
-    # for service in services:
-    #     for operation in operations: 
-    #         if service["id"] == operation["service_id_hired"]:
-
-    # return jsonify(my_previous_works), 200
-    
-    # except:
-        # print("entro en except")
-        # return "Couldn't find the pets",404
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

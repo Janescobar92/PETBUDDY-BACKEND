@@ -32,7 +32,18 @@ class Operations(db.Model):
         all_user_operations =  list(map(lambda x: x.serialize(), operations))
 
         return all_user_operations
-        
+    
+    def getOperations(param_id):
+        historic_operations = Operations.query.filter_by(service_id_hired= param_id)
+        all_historic_operations =  list(map(lambda x: x.serialize(), historic_operations))
+
+        for eachOperation in all_historic_operations:
+            user_who_hired_name = User.getUserWhoHired(eachOperation["user_id_who_hire"])
+            eachOperation["user_who_hired_name"]= user_who_hired_name
+
+        return all_historic_operations
+
+
         
 
 class User(db.Model):
@@ -81,6 +92,16 @@ class User(db.Model):
     def read_user(cls, id_user):
         user =   User.query.get(id_user)
         return user
+
+    def getUserWhoHired(param_id):
+        historic_user_who_hires = User.query.filter_by(id= param_id)
+        all_historic_user_who_hires =  list(map(lambda x: x.serialize(), historic_user_who_hires))
+
+        for eachUserWhoHired in all_historic_user_who_hires:
+            result = eachUserWhoHired["name"]
+
+        return result
+
 
     # def update_user():
 
@@ -178,6 +199,22 @@ class Service_type(db.Model):
     service_type_id = Column(String(255))
     type_service = db.relationship('Services', lazy=True)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "service_type_id": self.service_type_id,
+        }
+
+    def getServiceTypeValue(service_type_id):
+        historic_service_type = Service_type.query.filter_by(id = service_type_id)
+        all_historic_service_type =  list(map(lambda x: x.serialize(), historic_service_type))
+
+        for eachServiceType in all_historic_service_type:
+            result = eachServiceType["service_type_id"]
+
+        return result
+
+
 class Services(db.Model):
     __tablename__= "services"
     id = Column(Integer, primary_key=True)
@@ -201,10 +238,18 @@ class Services(db.Model):
     #     db.session.add(self)
     #     db.session.commit()
     @classmethod
-    def read_service_ofered(cls, id_user):
-        service = Services.query.filter_by(id_user_offer = id_user)
-        all_user_services =  list(map(lambda x: x.serialize(), service))
-        return all_user_services
+    def read_service_ofered(cls, id_user_param):
+        history_services = cls.query.filter_by(id_user_offer= id_user_param)
+        all_history_services = list(map(lambda x: x.serialize(), history_services))
+
+        for eachservice in all_history_services:
+            result = Operations.getOperations(eachservice["id"])
+            for eachElement in result:
+                service_type_value = Service_type.getServiceTypeValue(eachservice["id_service_type"])
+                eachElement["service_type"] = service_type_value
+                    
+
+        return result
 
     # def update_user():
 
