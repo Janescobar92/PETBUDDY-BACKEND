@@ -42,12 +42,13 @@ class Operations(db.Model):
     def getOperations(param_id):
         historic_operations = Operations.query.filter_by(service_id_hired= param_id)
         all_historic_operations =  list(map(lambda x: x.serialize(), historic_operations))
-
+        all_data_operations = []
         for eachOperation in all_historic_operations:
             user_who_hired_name = User.getUserWhoHired(eachOperation["user_id_who_hire"])
-            eachOperation["user_who_hired_name"]= user_who_hired_name
+            full_data_operations = {**eachOperation,**user_who_hired_name}
+            all_data_operations.append(full_data_operations)
 
-        return all_historic_operations
+        return all_data_operations
 
 
         
@@ -80,6 +81,7 @@ class User(db.Model):
             "phone":self.phone,
             "location":self.location,
             "biografy":self.biografy,
+            "image":self.image
             # do not serialize the password, its a security breach
         }
 
@@ -102,9 +104,12 @@ class User(db.Model):
     def getUserWhoHired(param_id):
         historic_user_who_hires = User.query.filter_by(id= param_id)
         all_historic_user_who_hires =  list(map(lambda x: x.serialize(), historic_user_who_hires))
+        result = {}
 
         for eachUserWhoHired in all_historic_user_who_hires:
-            result = eachUserWhoHired["name"]
+            name = eachUserWhoHired["name"]
+            image = eachUserWhoHired["image"]
+            result = { "name": name, "image": image}
 
         return result
 
@@ -271,7 +276,7 @@ class Services(db.Model):
             print(all_historic_services_hired,"print del sols servicios")
             user_offer = User.getUserWhoHired(eachService["id_user_offer"])
             service_type = Service_type.getServiceTypeValue(eachService["id_service_type"])
-            result = {"name":user_offer,  "service": service_type}
+            result = {**user_offer,  "service": service_type}
 
         return result
 
