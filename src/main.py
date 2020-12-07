@@ -73,11 +73,13 @@ def read_loged_user(id_user):
 @app.route('/user/<int:id_user>', methods=['PUT'])
 def update_loged_user(id_user):
     body=request.get_json() 
-    try: 
-        update_user = User.update_user(id_user)
-        return jsonify(update_user.serialize()), 200
-    except:
-        return "Couldn't read user info", 401
+    # try: 
+    # update_user = user(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+    update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
+    update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
+    return jsonify(update_user.serialize()), 200
+    # except:
+    #     return "Couldn't update user info", 401
 
 @app.route('/users', methods=['GET'])
 def get_all_users():  

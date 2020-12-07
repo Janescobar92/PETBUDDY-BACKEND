@@ -74,6 +74,7 @@ class User(db.Model):
             "phone":self.phone,
             "location":self.location,
             "biografy":self.biografy,
+            "image": self.image
             # do not serialize the password, its a security breach
         }
 
@@ -93,6 +94,17 @@ class User(db.Model):
         user =   User.query.get(id_user)
         return user
 
+    def update_user(self, id_user, name, email, last_name, phone, location, biografy, image):
+        user_to_update = User.query.filter_by(id= id_user).first()
+        user_to_update.name = name
+        user_to_update.image = image
+        user_to_update.email = email
+        user_to_update.last_name = last_name
+        user_to_update.phone = phone
+        user_to_update.location = location
+        user_to_update.biografy = biografy
+        db.session.commit()
+
     def getUserWhoHired(param_id):
         historic_user_who_hires = User.query.filter_by(id= param_id)
         all_historic_user_who_hires =  list(map(lambda x: x.serialize(), historic_user_who_hires))
@@ -103,7 +115,7 @@ class User(db.Model):
         return result
 
 
-    # def update_user():
+
 
     # def delete_user()
 
