@@ -36,20 +36,26 @@ def login_user():
     body=request.get_json()
     # auth = request.authorization   
     # print(auth, "este es el AUTH")
+    
+    user = User.query.filter_by(email=body["email"]).first()  
 
-    if "x-access-tokens" not in request.headers:
-        if not body or not body["email"] or not body["password"]:  
-            return 'could not verify', 402, {'WWW.Authentication': 'Basic realm: "login required"'}    
+    if user.is_active == True:
+        if "x-access-tokens" not in request.headers:
+            if not body or not body["email"] or not body["password"]:  
+                return 'could not verify', 402  
 
-        user = User.query.filter_by(email=body["email"]).first()  
-            
-        if check_password_hash(user.password, body["password"]):  
-            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=500)}, app.config['SECRET_KEY'])  
-            return jsonify({'token' : token.decode('UTF-8')}) 
-
-        return make_response('could not verify',  401, {'WWW.Authentication': 'Basic realm: "login required"'})
+            # user = User.query.filter_by(email=body["email"]).first()  
+                
+            if check_password_hash(user.password, body["password"]):  
+                token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=500)}, app.config['SECRET_KEY'])  
+                return jsonify({'token' : token.decode('UTF-8')}) 
+            return make_response('could not verify',  401)
+        else:
+            return make_response("Token admited", 200)
     else:
-        return make_response("Token admited", 200)
+        return "User doesn't exist please register", 404
+
+
 
 @app.route('/register', methods=['POST'])
 def create_user():
@@ -74,26 +80,21 @@ def read_loged_user(id_user):
 @app.route('/user/<int:id_user>', methods=['PUT'])
 def update_loged_user(id_user):
     body=request.get_json() 
-    # try: 
-    # update_user = user(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
-    update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
-    update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
-    return jsonify(update_user.serialize()), 200
-    # except:
-    #     return "Couldn't update user info", 401
+    try: 
+        update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
+        update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
+        return jsonify(update_user.serialize()), 200
+    except:
+        return "Couldn't update user info", 401
 
 @app.route('/user/<int:id_user>', methods=['DELETE'])
 def delete_user(id_user):
 
-    # try: 
-    # update_user = user(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
-    # delete_user= User(id=id_user)
-    # user_to_delete= User(id = id_user)
+    # try:
     user_to_delete = User.delete_user(id_user)
-
     return jsonify(user_to_delete.serialize()), 200
     # except:
-    #     return "Couldn't update user info", 401
+    #     return "Couldn't delete user profile", 401
 
 @app.route('/users', methods=['GET'])
 def get_all_users():  

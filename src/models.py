@@ -121,10 +121,6 @@ class User(db.Model):
         if user.is_active == True:
             user.is_active= False
             db.session.commit()
-        # else:
-        #     user.is_active= True
-        #     db.session.commit()
-        print(user, "This is the USER")
         return user
 
 
