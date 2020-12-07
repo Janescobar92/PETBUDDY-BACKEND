@@ -70,6 +70,7 @@ def read_loged_user(id_user):
     except:
         return "Couldn't read user info", 401
 
+
 @app.route('/user/<int:id_user>', methods=['PUT'])
 def update_loged_user(id_user):
     body=request.get_json() 
@@ -78,6 +79,19 @@ def update_loged_user(id_user):
     update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
     update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
     return jsonify(update_user.serialize()), 200
+    # except:
+    #     return "Couldn't update user info", 401
+
+@app.route('/user/<int:id_user>', methods=['DELETE'])
+def delete_user(id_user):
+
+    # try: 
+    # update_user = user(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+    # delete_user= User(id=id_user)
+    # user_to_delete= User(id = id_user)
+    user_to_delete = User.delete_user(id_user)
+
+    return jsonify(user_to_delete.serialize()), 200
     # except:
     #     return "Couldn't update user info", 401
 

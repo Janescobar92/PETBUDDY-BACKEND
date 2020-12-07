@@ -51,7 +51,7 @@ class User(db.Model):
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(80), nullable=False)
-    is_active = Column(Boolean(False), nullable=False)
+    is_active = Column(Boolean(True), nullable=False)
     name = Column(String(200), nullable=False)
     last_name = Column(String(200), nullable=False)
     phone = Column(String(30), unique=True)
@@ -74,7 +74,8 @@ class User(db.Model):
             "phone":self.phone,
             "location":self.location,
             "biografy":self.biografy,
-            "image": self.image
+            "image": self.image,
+            "is_active":self.is_active
             # do not serialize the password, its a security breach
         }
 
@@ -115,9 +116,18 @@ class User(db.Model):
         return result
 
 
+    def delete_user(id_user):
+        user = User.query.get(id_user)
+        if user.is_active == True:
+            user.is_active= False
+            db.session.commit()
+        # else:
+        #     user.is_active= True
+        #     db.session.commit()
+        print(user, "This is the USER")
+        return user
 
 
-    # def delete_user()
 
 ANIMALS_ENUM = ("perro", "gato", "conejo", "roedores", "aves")
 
