@@ -32,17 +32,30 @@ class Operations(db.Model):
             "hired_time": self.hired_time,
             "total_price": self.total_price
         }
+        
+    @classmethod
+    def read_service_hired(cls, id_user):
+        history_services_hired = cls.query.filter_by(user_id_who_hire= id_user)
+        all_history_services_hired =  list(map(lambda x: x.serialize(), history_services_hired))
+        all_hired_data= []
+        for eachOperation in all_history_services_hired:
+            user_offer_values = Services.getIdUserOffer(eachOperation["service_id_hired"])
+            hired_data = {**eachOperation, **user_offer_values}
+            all_hired_data.append(hired_data)
+            
+        return all_hired_data
     
     def getOperations(param_id):
         historic_operations = Operations.query.filter_by(service_id_hired= param_id)
         all_historic_operations =  list(map(lambda x: x.serialize(), historic_operations))
-
+        all_data_operations = []
         for eachOperation in all_historic_operations:
             user_who_hired_name = User.getUserWhoHired(eachOperation["user_id_who_hire"])
-            eachOperation["user_who_hired_name"]= user_who_hired_name
+            full_data_operations = {**eachOperation,**user_who_hired_name}
+            all_data_operations.append(full_data_operations)
 
-        return all_historic_operations
-               
+        return all_data_operations       
+
 
 class User(db.Model):
     __tablename__= "user"
@@ -114,9 +127,12 @@ class User(db.Model):
     def getUserWhoHired(param_id):
         historic_user_who_hires = User.query.filter_by(id= param_id)
         all_historic_user_who_hires =  list(map(lambda x: x.serialize(), historic_user_who_hires))
+        result = {}
 
         for eachUserWhoHired in all_historic_user_who_hires:
-            result = eachUserWhoHired["name"]
+            name = eachUserWhoHired["name"]
+            image = eachUserWhoHired["image"]
+            result = { "name": name, "image": image}
 
         return result
 
@@ -321,8 +337,19 @@ class Services(db.Model):
         # service.delete()    
         service.is_active = False
         db.session.commit() 
-        print(service.is_active, "estoy en delete models")
-        
+        print(service.is_active, "estoy en delete models")   
         return service
 
+    def getIdUserOffer(id_param):
+        historic_hired = Services.query.filter_by(id= id_param)
+        all_historic_services_hired = list(map(lambda x: x.serialize(), historic_hired))
+        
+        result = {}
+        for eachService in all_historic_services_hired:
+            print(all_historic_services_hired,"print del sols servicios")
+            user_offer = User.getUserWhoHired(eachService["id_user_offer"])
+            service_type = Service_type.getServiceTypeValue(eachService["id_service_type"])
+            result = {**user_offer,  "service": service_type}
+
+        return result
 
