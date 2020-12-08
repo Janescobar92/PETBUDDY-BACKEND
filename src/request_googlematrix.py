@@ -18,3 +18,5 @@ r = requests.get( matrix_url+ api_key)
 
 # return 
 distance = r.json()
+# return just the distance between the origin and destination
+# distance = r.json()["rows"][0]["elements"][0]["distance"]["text"]
