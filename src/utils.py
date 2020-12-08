@@ -36,6 +36,12 @@ def token_required(f):
             return f(current_user, *args, **kwargs)
     return decorator
 
+def isTrue(param):
+    if param == "true":
+        return True
+    else: 
+        return False
+
 def has_no_empty_params(rule):
     defaults = rule.defaults if rule.defaults is not None else ()
     arguments = rule.arguments if rule.arguments is not None else ()

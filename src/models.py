@@ -32,17 +32,24 @@ class Operations(db.Model):
             "hired_time": self.hired_time,
             "total_price": self.total_price
         }
-        
+    
+    def getOperations(param_id):
+        historic_operations = Operations.query.filter_by(service_id_hired= param_id)
+        all_historic_operations =  list(map(lambda x: x.serialize(), historic_operations))
 
+        for eachOperation in all_historic_operations:
+            user_who_hired_name = User.getUserWhoHired(eachOperation["user_id_who_hire"])
+            eachOperation["user_who_hired_name"]= user_who_hired_name
 
-
+        return all_historic_operations
+               
 
 class User(db.Model):
     __tablename__= "user"
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(80), nullable=False)
-    is_active = Column(Boolean(False), nullable=False)
+    is_active = Column(Boolean(True), nullable=False)
     name = Column(String(200), nullable=False)
     last_name = Column(String(200), nullable=False)
     phone = Column(String(30), unique=True)
@@ -65,6 +72,8 @@ class User(db.Model):
             "phone":self.phone,
             "location":self.location,
             "biografy":self.biografy,
+            "image": self.image,
+            "is_active":self.is_active
             # do not serialize the password, its a security breach
         }
 
@@ -79,12 +88,51 @@ class User(db.Model):
         except:
             db.session.rollback()
 
-    # def read_user():
+    def reactivate_user(self, name, last_name, password, is_active):
+        self.name = name
+        self.last_name = last_name
+        self.password = password
+        self.is_active = True
+        db.session.commit()
 
-    # def update_user():
+    @classmethod 
+    def read_user(cls, id_user):
+        user =   User.query.get(id_user)
+        return user
 
-    # def delete_user():
+    def update_user(self, id_user, name, email, last_name, phone, location, biografy, image):
+        user_to_update = User.query.filter_by(id= id_user).first()
+        user_to_update.name = name
+        user_to_update.image = image
+        user_to_update.email = email
+        user_to_update.last_name = last_name
+        user_to_update.phone = phone
+        user_to_update.location = location
+        user_to_update.biografy = biografy
+        db.session.commit()
 
+    def getUserWhoHired(param_id):
+        historic_user_who_hires = User.query.filter_by(id= param_id)
+        all_historic_user_who_hires =  list(map(lambda x: x.serialize(), historic_user_who_hires))
+
+        for eachUserWhoHired in all_historic_user_who_hires:
+            result = eachUserWhoHired["name"]
+
+        return result
+
+
+    def delete_user(id_user):
+        user = User.query.get(id_user)
+        if user.is_active == True:
+            user.is_active= False
+            db.session.commit()
+        return user
+
+
+
+ANIMALS_ENUM = ("perro", "gato", "conejo", "roedores", "aves")
+
+PETS_CHARACTER = ("amigable", "dominante", "nervioso", "agresivo", "jugueton")
 
 class Animals(db.Model):
     __tablename__="animals"
@@ -92,9 +140,9 @@ class Animals(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     name = db.Column(db.String(200), nullable=False)
     image = db.Column(db.Text())
-    animal_type = db.Column(db.Enum("perro", "gato", "conejo", "roedores", "aves"), nullable=False)
+    animal_type = db.Column(db.Enum(*ANIMALS_ENUM), nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    personality = db.Column(db.Enum("amigable", "dominante", "nervioso", "agresivo", "jugueton"), nullable=False)
+    personality = db.Column(db.Enum(*PETS_CHARACTER), nullable=False)
     gender = db.Column(db.Boolean(False), nullable=True)  #Preguntar si poner mejor enum(array)
     weight = db.Column(db.Float(), nullable=False)
     size = db.Column(db.Float(), nullable=False)
@@ -106,6 +154,7 @@ class Animals(db.Model):
 
     def serialize(self):
         return {
+            "id":self.id,
             "user_id": self.user_id,
             "name": self.name,
             "image": self.image,
@@ -120,7 +169,7 @@ class Animals(db.Model):
             # do not serialize the password, its a security breach
         }
 
-    def create_pet(self):
+    def create_user_pet(self):
         db.session.add(self)
         db.session.commit()
 
@@ -130,9 +179,26 @@ class Animals(db.Model):
         all_pets = list(map(lambda x: x.serialize(),pets))
         return all_pets
 
-    # def update_user():
+    def update_pets(self, id_user, id, name, image, animal_type, age, personality, gender, weight, size, diseases, sterilized):
+        # name, image, animal_type, age, personality, gender, weight, size, diseases, sterilized
+        pet = Animals.query.filter_by(user_id = id_user, id = id).first()
+        pet.name = name
+        pet.image = image
+        pet.animal_type = animal_type
+        pet.age = age
+        pet.personality = personality
+        pet.gender = gender
+        pet.weight = weight
+        pet.size = size
+        pet.diseases = diseases
+        pet.sterilized = sterilized
+        db.session.commit()
+        
 
-    # def delete_user():
+    def delete_pet(pet_id):
+        pet = Animals.query.filter_by(id= pet_id)
+        pet.delete()
+        db.session.commit()
 
 class Review(db.Model):
     __tablename__= "review"
@@ -155,6 +221,22 @@ class Service_type(db.Model):
     id = Column(Integer, primary_key=True)
     service_type_id = Column(String(255))
     type_service = db.relationship('Services', lazy=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "service_type_id": self.service_type_id,
+        }
+
+    def getServiceTypeValue(service_type_id):
+        historic_service_type = Service_type.query.filter_by(id = service_type_id)
+        all_historic_service_type =  list(map(lambda x: x.serialize(), historic_service_type))
+
+        for eachServiceType in all_historic_service_type:
+            result = eachServiceType["service_type_id"]
+
+        return result
+
 
 class Services(db.Model):
     __tablename__= "services"
@@ -198,6 +280,18 @@ class Services(db.Model):
         print(all_services,"estoy en models all services 2")
         return all_services
 
+    def read_service_ofered(cls, id_user_param):
+        history_services = cls.query.filter_by(id_user_offer= id_user_param)
+        all_history_services = list(map(lambda x: x.serialize(), history_services))
+
+        for eachservice in all_history_services:
+            result = Operations.getOperations(eachservice["id"])
+            for eachElement in result:
+                service_type_value = Service_type.getServiceTypeValue(eachservice["id_service_type"])
+                eachElement["service_type"] = service_type_value
+                    
+        return result
+
     @classmethod 
     def read_user_services(cls, id_user):
         services  = cls.query.filter_by(id_user_offer = id_user,is_active = True)
@@ -224,11 +318,9 @@ class Services(db.Model):
     def delete_service(cls,id_user, id_service):
         print("en models")
         service = cls.query.filter_by(id_user_offer = id_user, id_service_type = id_service).first()
-        # service.delete()
-        
+        # service.delete()    
         service.is_active = False
-        db.session.commit()
-       
+        db.session.commit() 
         print(service.is_active, "estoy en delete models")
         
         return service
