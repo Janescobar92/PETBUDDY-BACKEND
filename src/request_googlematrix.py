@@ -4,10 +4,12 @@ import requests
 api_key = "AIzaSyB0Z-gx11fiLL1MG9fO7zVsUWGHoacTgKM"
 
 # from where
-myLocation = "Madrid,spain"
+myLocation = "Madrid+ON|95+calle+lagasca+mMadrid+ON"
+# origins=Bobcaygeon+ON|24+Sussex+Drive+Ottawa+ON   address example
+# origins=Madrid+ON|95+calle+lagasca+mMdrid+ON   address example
 
 # To where
-destination = "Barcelona,spain"
+destination = "Sanlorenzodeelescorial+ON|7+calle+jacometrezo+mMadrid+ON"
 
 # base URL 
 matrix_url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + myLocation + "&destinations="+ destination +"&mode=walking&language=es-FR&key="
