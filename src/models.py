@@ -190,8 +190,9 @@ class Services(db.Model):
             db.session.rollback()
 
     @classmethod
-    def read_all_services(cls):
-        services = cls.query.filter_by(is_active = True)
+    def read_all_services(cls, service_type):
+        print("en models")
+        services = cls.query.filter_by(id_service_type = service_type, is_active = True)
         print(services,"estoy en models all services")
         all_services =  list(map(lambda x: x.serialize(), services))
         print(all_services,"estoy en models all services 2")

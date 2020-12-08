@@ -87,10 +87,10 @@ def get_all_users():
     print(result,"estoy en main users")
     return jsonify({'users': result})
 #///////////////////////////////////////////////////////
-@app.route('/services', methods=['GET'])
-def get_all_services():  
+@app.route('/<int:id_service_type>/services', methods=['GET'])
+def get_all_services(id_service_type):  
     try:
-        all_services = Services.read_all_services() 
+        all_services = Services.read_all_services(id_service_type) 
         print(all_services, "estoy en main /services")
         return jsonify(all_services), 200
     except:
@@ -102,7 +102,7 @@ def read_user_services(id_user):
         user_services = Services.read_user_services(id_user)
         return jsonify(user_services), 200
     except:
-        return "Couldn't find the user services",404
+        return "Couldn't find the user service",404
 
 @app.route('/user/<int:id_user>/service_disabled', methods=['GET'])
 def read_user_services_disabled(id_user):
