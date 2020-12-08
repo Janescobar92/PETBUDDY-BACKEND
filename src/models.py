@@ -90,6 +90,13 @@ class User(db.Model):
         except:
             db.session.rollback()
 
+    def reactivate_user(self, name, last_name, password, is_active):
+        self.name = name
+        self.last_name = last_name
+        self.password = password
+        self.is_active = True
+        db.session.commit()
+
     @classmethod 
     def read_user(cls, id_user):
         user =   User.query.get(id_user)
