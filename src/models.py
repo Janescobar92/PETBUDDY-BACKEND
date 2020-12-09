@@ -156,7 +156,7 @@ class Animals(db.Model):
     animal_type = db.Column(db.Enum(*ANIMALS_ENUM), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     personality = db.Column(db.Enum(*PETS_CHARACTER), nullable=False)
-    gender = db.Column(db.Boolean(False), nullable=True)  #Preguntar si poner mejor enum(array)
+    gender = db.Column(db.Boolean(False), nullable=True)  
     weight = db.Column(db.Float(), nullable=False)
     size = db.Column(db.Float(), nullable=False)
     diseases = db.Column(db.Text(), nullable=False)
