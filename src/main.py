@@ -190,13 +190,14 @@ def read_pets_by_user(id_user):
 
 @app.route('/user/<int:id_user>/pet', methods=['POST'])
 # @token_required
-def _pets_by_user(id_user):
-    try:
-        user_pets = Animals.read_pets(id_user)
-        return jsonify(user_pets), 200
-    except:
-        print("entro en except")
-        return "Couldn't find the pets",404
+def create_user_pet(id_user):
+    body=request.get_json()
+    # try:
+    new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+    new_user_pet.create_user_pet()
+    return jsonify(new_user_pet.serialize()), 200
+    # except:
+    #     return "Couldn't create the pet",404
 
 @app.route('/user/<int:id_user>/pet', methods=['PUT'])
 # @token_required
@@ -232,8 +233,11 @@ def read_pets_character():
     except:
         return "Couldn't get pets_character", 409
 
+# /////////////////////////////////////////////
+
 @app.route('/user/workedfor/<int:id_user_param>', methods=['GET'])
 def read_history_workedfor(id_user_param):
+    print(id_user_param)
     # try:
     history_service = Services.read_service_ofered(id_user_param)
     return jsonify(history_service), 200

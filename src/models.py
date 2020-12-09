@@ -281,17 +281,20 @@ class Services(db.Model):
         services = cls.query.filter_by(id_service_type = service_type, is_active = True)
         all_services =  list(map(lambda x: x.serialize(), services))
         return all_services
-
+    @classmethod
     def read_service_ofered(cls, id_user_param):
         history_services = cls.query.filter_by(id_user_offer= id_user_param)
         all_history_services = list(map(lambda x: x.serialize(), history_services))
-
+        result= []
+        
         for eachservice in all_history_services:
-            result = Operations.getOperations(eachservice["id"])
-            for eachElement in result:
-                service_type_value = Service_type.getServiceTypeValue(eachservice["id_service_type"])
-                eachElement["service_type"] = service_type_value
-                    
+            all_operations =  Operations.getOperations(eachservice["id"])
+            if len(Operations.getOperations(eachservice["id"])) != 0:                
+                result.append(*all_operations)
+        #     for eachElement in result:
+        #         service_type_value = Service_type.getServiceTypeValue(eachservice["id_service_type"])
+        #         eachElement["service_type"] = service_type_value
+        
         return result
 
     @classmethod 
@@ -322,6 +325,7 @@ class Services(db.Model):
         return service
 
     def getIdUserOffer(id_param):
+        print(id_param)
         historic_hired = Services.query.filter_by(id= id_param)
         all_historic_services_hired = list(map(lambda x: x.serialize(), historic_hired))
         
