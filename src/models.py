@@ -190,7 +190,6 @@ class Animals(db.Model):
         return all_pets
 
     def update_pets(self, id_user, id, name, image, animal_type, age, personality, gender, weight, size, diseases, sterilized):
-        # name, image, animal_type, age, personality, gender, weight, size, diseases, sterilized
         pet = Animals.query.filter_by(user_id = id_user, id = id).first()
         pet.name = name
         pet.image = image
@@ -291,9 +290,6 @@ class Services(db.Model):
             all_operations =  Operations.getOperations(eachservice["id"])
             if len(Operations.getOperations(eachservice["id"])) != 0:                
                 result.append(*all_operations)
-        #     for eachElement in result:
-        #         service_type_value = Service_type.getServiceTypeValue(eachservice["id_service_type"])
-        #         eachElement["service_type"] = service_type_value
         
         return result
 
