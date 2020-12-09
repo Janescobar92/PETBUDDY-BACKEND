@@ -86,6 +86,14 @@ class User(db.Model):
 
     # def delete_user():
 
+    def get_address(id_user_offer):
+        user = User.query.filter_by(id = id_user_offer).first()
+        return user.location
+
+    def get_origin(id_user):
+        user_location = User.query.filter_by(id = id_user).first()
+        return user_location.location
+
 
 class Animals(db.Model):
     __tablename__="animals"
@@ -197,6 +205,7 @@ class Services(db.Model):
     # def create_user(self):
     #     db.session.add(self)
     #     db.session.commit()
+
     @classmethod
     def read_service_ofered(cls, id_user):
         service = Services.query.filter_by(id_user_offer = id_user)
@@ -206,6 +215,24 @@ class Services(db.Model):
     # def update_user():
 
     # def delete_user():
+
+    def all_service_destinations(service_type_id):
+        destinations = Services.query.filter_by(id_service_type = service_type_id)
+        all_destinations_services =  list(map(lambda x: x.serialize(), destinations))
+
+        service_types_locations=[]
+        # id_destination = 0
+
+        for eachService in all_destinations_services:
+            address = User.get_origin(eachService["id_user_offer"])
+
+            service_types_locations.append(address)
+
+        return service_types_locations
+
+        print(all_destinations_services, "print del service ")
+
+
 
 
 

@@ -13,8 +13,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from utils import APIException, generate_sitemap, token_required, isTrue
 from admin import setup_admin
 from models import db, User, Animals, Services, Operations, Service_type
-from request_googlematrix import r, distance
+# from request_googlematrix import   distance, destiny
 from init_database import init_db
+import requests
 
 
 app = Flask(__name__)
@@ -131,11 +132,30 @@ def delete_user_pet(id_user, pet_id):
 # @app.route('/user/<int:id_user_param>/worked_for', methods=['GET'])
 # def read_history(id_user_param):
 
-@app.route('/service/distance', methods=['GET'])
-def get_services_distance():
-    body=request.get_json()
+@app.route('/user/<int:id_user>/distance/<int:service_type_id>', methods=['GET'])
+def get_services_distance(id_user, service_type_id):
+    # body=request.get_json()
 
-    return distance
+    origin_location = User.get_origin(id_user)
+    destiny_location = Services.all_service_destinations(service_type_id)
+    api_key = "AIzaSyB0Z-gx11fiLL1MG9fO7zVsUWGHoacTgKM"
+    varOr = "origins=" + origin_location
+    mode = "&mode=walking&language=es&key="
+    matrix_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+    result = []
+    for eachdestiny in destiny_location:
+        varDest = "&destinations="+ eachdestiny
+        r = requests.get( matrix_url + varOr + varDest + mode + api_key)
+        distance = r.json()["rows"][0]["elements"][0]["distance"]["text"]
+        result.append(distance)
+
+    return jsonify(result),200
+
+
+# @app.route('/service/distance', methods=['GET'])
+# def get_services_distance(id_user, service_type_id):
+#     # body=request.get_json()
+#     return distance
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
