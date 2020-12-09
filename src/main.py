@@ -33,6 +33,7 @@ app.cli.add_command(init_db)
 @app.route('/login', methods=['GET','POST'])  
 def login_user(): 
     body=request.get_json()
+
     # auth = request.authorization   
     # print(auth, "este es el AUTH")
     
@@ -53,6 +54,7 @@ def login_user():
             return make_response("Token admited", 200)
     else:
         return "User doesn't exist please register", 404
+
 
 
 
