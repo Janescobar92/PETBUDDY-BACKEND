@@ -90,9 +90,6 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
-    # def __repr__(self):
-    #     return '<User %r>' % self.username
-
     def create_user(self):
         try:
             print(self,"DEVUELVE EL OBJETO USER")
@@ -165,9 +162,6 @@ class Animals(db.Model):
     diseases = db.Column(db.Text(), nullable=False)
     sterilized = db.Column(db.Boolean(False), nullable=False) 
 
-    # def __repr__(self):
-    #     return '<User %r>' % self.username
-
     def serialize(self):
         return {
             "id":self.id,
@@ -223,14 +217,14 @@ class Review(db.Model):
     points = db.Column(db.Float())
     text = db.Column(db.Text(), nullable=False)
     
-    # def create_user(self):
+    # def create_review(self):
     #     db.session.add(self)
     #     db.session.commit()
-    # def read_user():
+    # def read_review():
 
-    # def update_user():
+    # def update_review():
 
-    # def delete_user():
+    # def delete_review():
 
 class Service_type(db.Model):
     __tablename__="service_type"
@@ -275,13 +269,8 @@ class Services(db.Model):
             "price_h": self.price_h
         }
 
-    # def create_user(self):
-    #     db.session.add(self)
-    #     db.session.commit()
-
     def create_service(self):
         try:
-            print(self,"DEVUELVE EL OBJETO USER")
             db.session.add(self)
             db.session.commit()
         except:
@@ -289,11 +278,8 @@ class Services(db.Model):
 
     @classmethod
     def read_all_services(cls, service_type):
-        print("en models")
         services = cls.query.filter_by(id_service_type = service_type, is_active = True)
-        print(services,"estoy en models all services")
         all_services =  list(map(lambda x: x.serialize(), services))
-        print(all_services,"estoy en models all services 2")
         return all_services
 
     def read_service_ofered(cls, id_user_param):
@@ -323,8 +309,6 @@ class Services(db.Model):
     @classmethod 
     def update_services(clss, id_service_type, id_user_offer, description, price_h):
         service = clss.query.filter_by(id_user_offer = id_user_offer, id_service_type = id_service_type).first()
-        print(service, "estoy en models update")
-        # service.id_service_type = id_service_type
         service.is_active = True
         service.description = description
         service.price_h = price_h
@@ -332,12 +316,9 @@ class Services(db.Model):
     
     @classmethod    
     def delete_service(cls,id_user, id_service):
-        print("en models")
-        service = cls.query.filter_by(id_user_offer = id_user, id_service_type = id_service).first()
-        # service.delete()    
+        service = cls.query.filter_by(id_user_offer = id_user, id_service_type = id_service).first()  
         service.is_active = False
         db.session.commit() 
-        print(service.is_active, "estoy en delete models")   
         return service
 
     def getIdUserOffer(id_param):
@@ -346,7 +327,6 @@ class Services(db.Model):
         
         result = {}
         for eachService in all_historic_services_hired:
-            print(all_historic_services_hired,"print del sols servicios")
             user_offer = User.getUserWhoHired(eachService["id_user_offer"])
             service_type = Service_type.getServiceTypeValue(eachService["id_service_type"])
             result = {**user_offer,  "service": service_type}
