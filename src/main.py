@@ -241,7 +241,7 @@ def read_history_hired(id_user):
         history_service_hired = Operations.read_service_hired(id_user)
         return jsonify(history_service_hired), 200
     except:
-        return "Couldn't find  history", 409
+        return "Couldn't find  history", 408
 
 
 
