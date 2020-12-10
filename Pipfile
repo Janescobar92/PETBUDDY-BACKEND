@@ -21,6 +21,7 @@ flask-admin = "*"
 sqlalchemy-utils = "*"
 pyjwt = "*"
 werkzeug = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"

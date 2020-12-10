@@ -12,7 +12,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from utils import APIException, generate_sitemap, token_required, isTrue
 from admin import setup_admin
 from models import db, User, Animals, Services, Operations, Service_type, ANIMALS_ENUM, PETS_CHARACTER
+from request_googlematrix import destiny
 from init_database import init_db
+import requests
 
 
 app = Flask(__name__)
@@ -239,6 +241,16 @@ def read_history_hired(id_user):
     except:
         return "Couldn't find  history", 409
 
+
+
+@app.route('/user/<int:id_user>/distance/<int:service_type_id>', methods=['GET'])
+def get_services_distance(id_user, service_type_id):
+    destiny(id_user, service_type_id)
+    result = destiny(id_user, service_type_id)
+   
+
+    return jsonify(result),200
+    
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)

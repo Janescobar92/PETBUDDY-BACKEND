@@ -141,11 +141,21 @@ class User(db.Model):
             db.session.commit()
         return user
 
+    def get_address(id_user_offer):
+        user = User.query.filter_by(id = id_user_offer).first()
+        return user.location
+
+    def get_origin(id_user):
+        user_location = User.query.filter_by(id = id_user).first()
+        result={"id":user_location.id, "address":user_location.location}
+        return result
+
 
 
 ANIMALS_ENUM = ("perro", "gato", "conejo", "roedores", "aves")
 
 PETS_CHARACTER = ("amigable", "dominante", "nervioso", "agresivo", "jugueton")
+
 
 class Animals(db.Model):
     __tablename__="animals"
@@ -332,6 +342,25 @@ class Services(db.Model):
             user_offer = User.getUserWhoHired(eachService["id_user_offer"])
             service_type = Service_type.getServiceTypeValue(eachService["id_service_type"])
             result = {**user_offer,  "service": service_type}
-
         return result
+
+    def all_service_destinations(service_type_id):
+        destinations = Services.query.filter_by(id_service_type = service_type_id)
+        all_destinations_services =  list(map(lambda x: x.serialize(), destinations))
+
+        service_types_locations=[]
+        # id_destination = 0
+
+        for eachService in all_destinations_services:
+            address = User.get_origin(eachService["id_user_offer"])
+
+            service_types_locations.append(address)
+
+        return service_types_locations
+
+
+
+
+
+       
 
