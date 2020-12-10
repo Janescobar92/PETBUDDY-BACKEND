@@ -90,12 +90,12 @@ def read_loged_user(id_user):
 @app.route('/user/<int:id_user>', methods=['PUT'])
 def update_loged_user(id_user):
     body=request.get_json() 
-    try: 
-        update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
-        update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
-        return jsonify(update_user.serialize()), 200
-    except:
-        return "Couldn't update user info", 401
+    # try: 
+    update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
+    update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
+    return jsonify(update_user.serialize()), 200
+    # except:
+    #     return "Couldn't update user info", 401
 
 @app.route('/user/<int:id_user>', methods=['DELETE'])
 def delete_user(id_user):
@@ -135,12 +135,12 @@ def read_user_services_disabled(id_user):
 # @token_required
 def create_user_service(id_user):
     body=request.get_json()
-    try:
-        new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
-        new_service.create_service()
-        return jsonify(new_service.serialize()), 200
-    except:
-        return "Couldn't create the service",404
+    # try:
+    new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
+    new_service.create_service()
+    return jsonify(new_service.serialize()), 200
+    # except:
+    #     return "Couldn't create the service",404
 
 @app.route('/user/<int:id_user>/service', methods=['PUT'])
 # @token_required
@@ -162,9 +162,6 @@ def delete_user_service(id_user, id_service_type):
         return jsonify(deleted_service.serialize()), 202
     except:
         return "Couldn't delete the service", 409
-
-
-
 
 
 #///////////////////////////////////////////////////////
@@ -199,14 +196,16 @@ def update_user_pet(id_user):
     except:
         return "Couldn't update pet", 404
 
-@app.route('/user/<int:id_user>/<int:pet_id>', methods=['DELETE'])
+@app.route('/user/pet/<int:pet_id>', methods=['DELETE'])
 # @token_required
-def delete_user_pet(id_user, pet_id):
-    try:
-        deleted_pet = Animals.delete_pet(pet_id)
-        return jsonify(deleted_pet), 202
-    except:
-        return "Couldn't delete the pet", 409
+def delete_user_pet(pet_id):
+    # try:
+    deleted_pet = Animals.delete_pet(pet_id)
+    # return jsonify(deleted_pet.serialize()), 202
+    print(deleted_pet)
+    return jsonify(deleted_pet), 202
+    # except:
+    #     return "Couldn't delete the pet", 409
 
 @app.route('/animals_type', methods=['GET'])
 def read_animals_type():

@@ -206,8 +206,10 @@ class Animals(db.Model):
 
     def delete_pet(pet_id):
         pet = Animals.query.filter_by(id= pet_id)
+        all_deleted_pets=  list(map(lambda x: x.serialize(), pet))
         pet.delete()
         db.session.commit()
+        return all_deleted_pets
 
 class Review(db.Model):
     __tablename__= "review"
