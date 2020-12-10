@@ -317,6 +317,7 @@ class Services(db.Model):
     @classmethod 
     def update_services(clss, id_service_type, id_user_offer, description, price_h):
         service = clss.query.filter_by(id_user_offer = id_user_offer, id_service_type = id_service_type).first()
+        print(service, "ADIOOOOOOOS")
         service.is_active = True
         service.description = description
         service.price_h = price_h
@@ -324,10 +325,14 @@ class Services(db.Model):
     
     @classmethod    
     def delete_service(cls,id_user, id_service):
-        service = cls.query.filter_by(id_user_offer = id_user, id_service_type = id_service).first()  
+        service = cls.query.filter_by(id_user_offer = id_user, id_service_type = id_service).first()
+        # service_deleted = list(map(lambda x: x.serialize(), service))
+
+        # service.delete()
         service.is_active = False
         db.session.commit() 
         return service
+
 
     def getIdUserOffer(id_param):
         historic_hired = Services.query.filter_by(id= id_param)

@@ -118,14 +118,6 @@ def get_all_services(id_service_type):
     except:
         return "Couldn't find the services",404
 
-@app.route('/user/<int:id_user>/service', methods=['GET'])
-# @token_required
-def read_user_services(id_user):
-    try:  
-        user_services = Services.read_user_services(id_user)
-        return jsonify(user_services), 200
-    except:
-        return "Couldn't find the user service",404
 
 @app.route('/user/<int:id_user>/service_disabled', methods=['GET'])
 def read_user_services_disabled(id_user):
@@ -140,33 +132,57 @@ def read_user_services_disabled(id_user):
 # @token_required
 def create_user_service(id_user):
     body=request.get_json()
+    exists = db.session.query(db.exists().where(Services.id_service_type == body['id_service_type'])).scalar()
+    # is_active = db.session.query(db.exists().where(Services.is_active == False)).scalar()
+
+    # print (exists)
+    if exists == False:
     # try:
-    new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
-    new_service.create_service()
-    return jsonify(new_service.serialize()), 200
+        new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
+        new_service.create_service()
+        return jsonify(new_service.serialize()), 200
+    else:
+        service = Services.query.filter_by(id_service_type=body["id_service_type"]).first()
+        is_active = service.is_active
+        print(is_active)
+        if is_active == True: 
+            new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
+            new_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"]) 
+            return jsonify(new_service.serialize()), 200
+        else:
+            return "Couldn't create the service",404
     # except:
     #     return "Couldn't create the service",404
+
+@app.route('/user/<int:id_user>/service', methods=['GET'])
+# @token_required
+def read_user_services(id_user):
+    try:  
+        user_services = Services.read_user_services(id_user)
+        return jsonify(user_services), 200
+    except:
+        return "Couldn't find the user service",404
 
 @app.route('/user/<int:id_user>/service', methods=['PUT'])
 # @token_required
 def update_user_service(id_user):
     body=request.get_json()
+    # try:
+    update_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=True)
+    print(update_service, "HOOOOOOOLA")
+    update_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"])
+    return jsonify(update_service.serialize()), 200
+    # except:
+    #     return "Couldn't update the service",404
 
-    try:
-        update_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
-        update_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"])
-        return jsonify(update_service.serialize()), 200
-    except:
-        return "Couldn't update the service",404
-
-@app.route('/user/<int:id_user>/<int:id_service_type>', methods=['DELETE'])
+@app.route('/user/<int:id_user>/dservices/<int:id_service_type>', methods=['DELETE'])
 # @token_required
 def delete_user_service(id_user, id_service_type):
-    try:
-        deleted_service = Services.delete_service(id_user,id_service_type)
-        return jsonify(deleted_service.serialize()), 202
-    except:
-        return "Couldn't delete the service", 409
+    # try:
+    deleted_service = Services.delete_service(id_user,id_service_type)
+    return jsonify(deleted_service.serialize()), 202
+    # except:
+    #     return "Couldn't delete the service", 409
 
 
 #///////////////////////////////////////////////////////
