@@ -1,4 +1,7 @@
 from flask import jsonify, url_for
+from functools import wraps
+from flask import Flask, request, jsonify, url_for, make_response
+
 
 class APIException(Exception):
     status_code = 400
@@ -14,6 +17,33 @@ class APIException(Exception):
         rv = dict(self.payload or ())
         rv['message'] = self.message
         return rv
+
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+
+        token = None
+
+        if 'x-access-tokens' in request.headers:
+            token = request.headers['x-access-tokens']
+
+        if not token:
+            return jsonify({'message': 'a valid token is missing'})
+
+        try:
+            data = jwt.decode(token, app.config[SECRET_KEY])
+            current_user = Users.query.filter_by(public_id=data['public_id']).first()
+        except:
+            return jsonify({'message': 'token is invalid'})
+
+            return f(current_user, *args, **kwargs)
+    return decorator
+
+def isTrue(param):
+    if param == "true":
+        return True
+    else: 
+        return False
 
 def has_no_empty_params(rule):
     defaults = rule.defaults if rule.defaults is not None else ()
