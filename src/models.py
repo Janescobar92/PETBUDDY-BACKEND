@@ -92,7 +92,6 @@ class User(db.Model):
 
     def create_user(self):
         try:
-            print(self,"DEVUELVE EL OBJETO USER")
             db.session.add(self)
             db.session.commit()
         except:
@@ -333,7 +332,6 @@ class Services(db.Model):
         return service
 
     def getIdUserOffer(id_param):
-        print(id_param)
         historic_hired = Services.query.filter_by(id= id_param)
         all_historic_services_hired = list(map(lambda x: x.serialize(), historic_hired))
         

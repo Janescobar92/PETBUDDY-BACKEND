@@ -204,7 +204,6 @@ def delete_user_pet(pet_id):
     # try:
     deleted_pet = Animals.delete_pet(pet_id)
     # return jsonify(deleted_pet.serialize()), 202
-    print(deleted_pet)
     return jsonify(deleted_pet), 202
     # except:
     #     return "Couldn't delete the pet", 409
