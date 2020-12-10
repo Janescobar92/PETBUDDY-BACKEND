@@ -1,35 +1,26 @@
-# import requests
-# from main.py import varOR, varDest
+import requests
+from models import db, User, Animals, Services, Operations, Service_type
 
-# #  API KEY
-# api_key = "AIzaSyB0Z-gx11fiLL1MG9fO7zVsUWGHoacTgKM"
+api_key = "AIzaSyB0Z-gx11fiLL1MG9fO7zVsUWGHoacTgKM"
 
-# # from where
-# # myLocation = "origins=Madrid+ON|95+calle+lagasca+Madrid+ON"
-# # myLocation = "origins=" 
-# # origins=Bobcaygeon+ON|24+Sussex+Drive+Ottawa+ON   address example
-# # origins=Madrid+ON|95+calle+lagasca+mMdrid+ON   address example
+matrix_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 
-# # To where
-# # destination = "&destinations="
+def destiny(id_user, service_type_id):
+    origin_location = User.get_origin(id_user)
+    destiny_location = Services.all_service_destinations(service_type_id)
+    # print (origin_location, origin_location)
 
-# # Travel mode + api_key filter
-# matrix_url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+    origin_address = origin_location["address"]
 
-# mode = "&mode=walking&language=es&key="
+    mode = "&mode=walking&language=es&key="
+    varOr = "origins=" +  origin_address
+    result = []
+    for eachdestiny in destiny_location:
+        distance_service = {}
+        varDest = "&destinations="+ eachdestiny["address"]
+        r = requests.get( matrix_url + varOr + varDest + mode + api_key)
+        distance = r.json()["rows"][0]["elements"][0]["distance"]["text"]
+        distance_service = {"id_user_offer": eachdestiny["id"], "distance": distance}
+        result.append(distance_service)
 
-
-# def destiny(myLocation, destination):
-# r = requests.get( matrix_url + myLocation + destination + mode + api_key)
-#     # r = requests.get( matrix_url + myLocation + destination + mode + api_key)
-# distance = r.json()["rows"][0]["elements"][0]["distance"]["text"]
-#     # return distance
-
-# # base URL 
-# matrix_url + outputFormat?parameters
-
-# r = requests.get(matrix_url + myLocation + "&destinations=" + destination + "&key="+ api_key)
-
-    # distance = r.json()
-# return full object
-# return just the distance between the origin and destination
+    return result

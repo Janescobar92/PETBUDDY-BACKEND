@@ -92,7 +92,8 @@ class User(db.Model):
 
     def get_origin(id_user):
         user_location = User.query.filter_by(id = id_user).first()
-        return user_location.location
+        result={"id":user_location.id, "address":user_location.location}
+        return result
 
 
 class Animals(db.Model):
