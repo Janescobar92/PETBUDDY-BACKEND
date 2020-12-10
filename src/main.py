@@ -81,6 +81,7 @@ def create_user():
             return "Couldn't create the user",401
 
 @app.route('/user/<int:id_user>', methods=['GET'])
+@token_required
 def read_loged_user(id_user):
     try: 
         user = User.read_user(id_user)
@@ -118,6 +119,7 @@ def get_all_services(id_service_type):
         return "Couldn't find the services",404
 
 @app.route('/user/<int:id_user>/service', methods=['GET'])
+# @token_required
 def read_user_services(id_user):
     try:  
         user_services = Services.read_user_services(id_user)
@@ -127,6 +129,7 @@ def read_user_services(id_user):
 
 @app.route('/user/<int:id_user>/service_disabled', methods=['GET'])
 def read_user_services_disabled(id_user):
+    
     try:  
         user_services = Services.read_user_services_disabled(id_user)
         return jsonify(user_services), 200
