@@ -252,6 +252,10 @@ def get_services_distance(id_user, service_type_id):
    
 
     return jsonify(result),200
+
+@app.route('/')
+def sitemap():
+    return generate_sitemap(app)
     
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
