@@ -184,7 +184,7 @@ def create_user_pet(id_user):
     try:
         new_user_pet = Animals(user_id = id_user, name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
         new_user_pet.create_user_pet()
-    return jsonify(new_user_pet.serialize()), 200
+        return jsonify(new_user_pet.serialize()), 200
     except:
         return "Couldn't create the pet",404
 
