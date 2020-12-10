@@ -280,11 +280,9 @@ class Services(db.Model):
         }
 
     def create_service(self):
-        try:
-            db.session.add(self)
-            db.session.commit()
-        except:
-            db.session.rollback()
+        db.session.add(self)
+        db.session.commit()
+        
 
     @classmethod
     def read_all_services(cls, service_type):

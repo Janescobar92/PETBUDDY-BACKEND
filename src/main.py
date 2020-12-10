@@ -141,7 +141,7 @@ def read_user_services_disabled(id_user):
 def create_user_service(id_user):
     body=request.get_json()
     # try:
-    new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"])
+    new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
     new_service.create_service()
     return jsonify(new_service.serialize()), 200
     # except:
