@@ -132,24 +132,28 @@ def read_user_services_disabled(id_user):
 # @token_required
 def create_user_service(id_user):
     body=request.get_json()
-    exists = db.session.query(db.exists().where(Services.id_service_type == body['id_service_type'])).scalar()
+    # service_exists = db.session.query(db.exists().where(Services.id_service_type == body['id_service_type'])).scalar()
+    # user_exists = db.session.query(db.exists().where(Services.id_service_type == body['id_service_type'])).scalar()
     # is_active = db.session.query(db.exists().where(Services.is_active == False)).scalar()
+    exists = Services.query.filter_by(id_service_type = body["id_service_type"], id_user_offer = id_user).scalar()
 
-    # print (exists)
-    if exists == False:
-    # try:
-        new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
+    # print(services)
+    if exists == None:
+        print(body, "holAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+        new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=body["is_active"])
         new_service.create_service()
         return jsonify(new_service.serialize()), 200
     else:
+        print(body, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIOS")
         service = Services.query.filter_by(id_service_type=body["id_service_type"]).first()
         is_active = service.is_active
-        print(is_active)
         if is_active == True: 
+            print(service, "ISACTIVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeee")
             new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
             new_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"]) 
             return jsonify(new_service.serialize()), 200
         else:
+            print("ELSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
             return "Couldn't create the service",404
     # except:
     #     return "Couldn't create the service",404
@@ -169,7 +173,6 @@ def update_user_service(id_user):
     body=request.get_json()
     # try:
     update_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=True)
-    print(update_service, "HOOOOOOOLA")
     update_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"])
     return jsonify(update_service.serialize()), 200
     # except:
