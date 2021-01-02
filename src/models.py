@@ -111,8 +111,12 @@ class User(db.Model):
 
     def update_user(self, id_user, name, email, last_name, phone, location, biografy, image):
         user_to_update = User.query.filter_by(id= id_user).first()
+        if image is not None:
+            user_to_update.image = image
+        else:
+            user_to_update.image = user_to_update.image
         user_to_update.name = name
-        user_to_update.image = image
+        # user_to_update.image = image
         user_to_update.email = email
         user_to_update.last_name = last_name
         user_to_update.phone = phone

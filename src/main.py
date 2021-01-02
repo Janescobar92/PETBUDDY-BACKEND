@@ -39,7 +39,6 @@ def login_user():
     # print(auth, "este es el AUTH")
     
     user = User.query.filter_by(email=body["email"]).first()  
-
     if user.is_active == True:
         if "x-access-tokens" not in request.headers:
             if not body or not body["email"] or not body["password"]:  
