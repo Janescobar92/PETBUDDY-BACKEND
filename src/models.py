@@ -153,7 +153,9 @@ class User(db.Model):
         result={"id":user_location.id, "address":user_location.location}
         return result
 
-
+    def getUserName(id_user_offer):
+        user = User.query.filter_by(id = id_user_offer).first()
+        return user.name
 
 ANIMALS_ENUM = ("perro", "gato", "conejo", "roedores", "aves")
 
@@ -292,7 +294,12 @@ class Services(db.Model):
     def read_all_services(cls, service_type):
         services = cls.query.filter_by(id_service_type = service_type, is_active = True)
         all_services =  list(map(lambda x: x.serialize(), services))
+        result = {},
+        for eachservice in all_services:
+            name = User.getUserName(eachservice["id_user_offer"])
+            eachservice["name"] = name
         return all_services
+    
     @classmethod
     def read_service_ofered(cls, id_user_param):
         history_services = cls.query.filter_by(id_user_offer= id_user_param)

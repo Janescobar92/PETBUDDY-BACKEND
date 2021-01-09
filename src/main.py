@@ -111,11 +111,11 @@ def delete_user(id_user):
 #///////////////////////////////////////////////////////
 @app.route('/<int:id_service_type>/services', methods=['GET'])
 def get_all_services(id_service_type):  
-    try:
-        all_services = Services.read_all_services(id_service_type) 
-        return jsonify(all_services), 200
-    except:
-        return "Couldn't find the services",404
+    # try:
+    all_services = Services.read_all_services(id_service_type) 
+    return jsonify(all_services), 200
+    # except:
+    #     return "Couldn't find the services",404
 
 
 @app.route('/user/<int:id_user>/service_disabled', methods=['GET'])
@@ -189,14 +189,6 @@ def delete_user_service(id_user, id_service_type):
 
 #///////////////////////////////////////////////////////
 
-@app.route('/user/<int:id_user>/pet', methods=['GET'])
-def read_pets_by_user(id_user):
-    try:
-        user_pets = Animals.read_pets(id_user)
-        return jsonify(user_pets), 200
-    except:
-        return "Couldn't find the pets",404
-
 @app.route('/user/<int:id_user>/pet', methods=['POST'])
 # @token_required
 def create_user_pet(id_user):
@@ -208,16 +200,25 @@ def create_user_pet(id_user):
     except:
         return "Couldn't create the pet",404
 
+@app.route('/user/<int:id_user>/pet', methods=['GET'])
+def read_pets_by_user(id_user):
+    try:
+        user_pets = Animals.read_pets(id_user)
+        return jsonify(user_pets), 200
+    except:
+        return "Couldn't find the pets",404
+
+
 @app.route('/user/<int:id_user>/pet', methods=['PUT'])
 # @token_required
 def update_user_pet(id_user):
     body=request.get_json()
-    try:
-        update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
-        update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], isTrue(body["gender"]), body["weight"], body["size"], body["diseases"], isTrue(body["sterilized"]))
-        return (update_pet.serialize())
-    except:
-        return "Couldn't update pet", 404
+    # try:
+    update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+    update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], isTrue(body["gender"]), body["weight"], body["size"], body["diseases"], isTrue(body["sterilized"]))
+    return (update_pet.serialize())
+    # except:
+    #     return "Couldn't update pet", 404
 
 @app.route('/user/pet/<int:pet_id>', methods=['DELETE'])
 # @token_required
