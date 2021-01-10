@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 import jwt
-import datetime
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import APIException, generate_sitemap, token_required, isTrue
 from admin import setup_admin
@@ -248,11 +248,12 @@ def read_pets_character():
 
 @app.route('/user/workedfor/<int:id_user_param>', methods=['GET'])
 def read_history_workedfor(id_user_param):
-     try:
-        history_service = Services.read_service_ofered(id_user_param)
-        return jsonify(history_service), 200
-     except:
-        return "Couldn't find  history", 409
+    #  try:
+    history_service = Services.read_service_ofered(id_user_param)
+    
+    return jsonify(history_service), 200
+    #  except:
+    #     return "Couldn't find  history", 409
 
 @app.route('/user/hired/<int:id_user>', methods=['GET'])
 def read_history_hired(id_user):
@@ -271,6 +272,21 @@ def get_services_distance(id_user, service_type_id):
    
 
     return jsonify(result),200
+
+@app.route('/paymant/paypal/', methods=['POST'])
+def create_operation():
+    body=request.get_json()
+    print(body)
+    user = int(body["user_who_hired"])
+    print(user)
+    service_type = int(body["service_id_hired"])
+    date = datetime.now()
+    print(service_type)
+    new_operation = Operations( user_id_who_hire= user, service_id_hired = service_type, hired_time=body["hired_time"], total_price=body["total_price"], date = date)
+    print(new_operation,"HELOOOOOOO")
+    new_operation.create_operation()
+    
+    return jsonify(new_operation.serialize()),200
 
 @app.route('/')
 def sitemap():

@@ -8,14 +8,18 @@ db = SQLAlchemy()
 class Operations(db.Model):
     __tablename__= "operations"
     id = db.Column(Integer, primary_key=True)
-    user_id_who_hire = Column(Integer, ForeignKey("user.id"), primary_key=True)
-    service_id_hired = Column(Integer, ForeignKey("services.id"), primary_key=True)
+    user_id_who_hire = Column(Integer, ForeignKey("user.id"), nullable=False, unique=False)
+    service_id_hired = Column(Integer, ForeignKey("services.id"), nullable=False, unique=False)
     date = Column(db.Date, unique=False, nullable=False)
     hired_time = Column(Integer, nullable=False)
     total_price= Column(Float(), nullable= False)
     # realtionships
     user_operation = db.relationship("User", back_populates="services_operation")
     service_operations = db.relationship("Services", back_populates="users_operations")
+
+    def create_operation(self):
+        db.session.add(self)
+        db.session.commit()
 
     def read_operations():
         operations = Operations.query.all()
@@ -312,7 +316,7 @@ class Services(db.Model):
         for eachservice in all_history_services:
             all_operations =  Operations.getOperations(eachservice["id"])
             if len(Operations.getOperations(eachservice["id"])) != 0:                
-                result.append(*all_operations)
+                result.append(all_operations)
         
         return result
 
