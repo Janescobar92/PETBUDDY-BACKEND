@@ -93,6 +93,7 @@ def read_loged_user(id_user):
 def update_loged_user(id_user):
     body=request.get_json() 
     # try: 
+    print(body,"HOOOOOOOOLA")
     update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
     update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
     return jsonify(update_user.serialize()), 200
