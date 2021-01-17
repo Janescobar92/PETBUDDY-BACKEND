@@ -7,7 +7,6 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 import jwt
-from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import APIException, generate_sitemap, token_required, isTrue
 from admin import setup_admin
@@ -15,6 +14,7 @@ from models import db, User, Animals, Services, Operations, Service_type, ANIMAL
 from request_googlematrix import destiny
 from init_database import init_db
 import requests
+import datetime
 
 
 app = Flask(__name__)
@@ -276,14 +276,9 @@ def get_services_distance(id_user, service_type_id):
 @app.route('/paymant/paypal/', methods=['POST'])
 def create_operation():
     body=request.get_json()
-    print(body)
     user = int(body["user_who_hired"])
-    print(user)
     service_type = int(body["service_id_hired"])
-    date = datetime.now()
-    print(service_type)
-    new_operation = Operations( user_id_who_hire= user, service_id_hired = service_type, hired_time=body["hired_time"], total_price=body["total_price"], date = date)
-    print(new_operation,"HELOOOOOOO")
+    new_operation = Operations( user_id_who_hire= user, service_id_hired = service_type, hired_time=body["hired_time"], total_price=body["total_price"], date =body["date"])
     new_operation.create_operation()
     
     return jsonify(new_operation.serialize()),200

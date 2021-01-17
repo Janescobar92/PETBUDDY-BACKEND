@@ -10,7 +10,7 @@ class Operations(db.Model):
     id = db.Column(Integer, primary_key=True)
     user_id_who_hire = Column(Integer, ForeignKey("user.id"), nullable=False, unique=False)
     service_id_hired = Column(Integer, ForeignKey("services.id"), nullable=False, unique=False)
-    date = Column(db.Date, unique=False, nullable=False)
+    date =  Column(String(250), unique=False, nullable=False)
     hired_time = Column(Integer, nullable=False)
     total_price= Column(Float(), nullable= False)
     # realtionships
