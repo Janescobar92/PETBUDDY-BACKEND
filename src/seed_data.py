@@ -90,23 +90,23 @@ data = {
     "Service_type":[
         {
             "id": 1,
-            "service_type_id": "paseador"
+            "service_type_id": "Paseador"
         },
         {
             "id": 2,
-            "service_type_id": "canguro"
+            "service_type_id": "Cuidador"
         },
          {
             "id": 3,
-            "service_type_id": "peluquero"
+            "service_type_id": "Hotel"
         },
          {
             "id": 4,
-            "service_type_id": "veterinario"
+            "service_type_id": "Adiestrador"
         },
          {
             "id": 5,
-            "service_type_id": "casa de acogida"
+            "service_type_id": "Veterinario"
         }
     ],
     "Services":[

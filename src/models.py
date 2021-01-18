@@ -316,10 +316,12 @@ class Services(db.Model):
         
         for eachservice in all_history_services:
             all_operations =  Operations.getOperations(eachservice["id"])
+            service_type = Service_type.getServiceTypeValue(eachservice["id_service_type"])
             if len(all_operations) != 0:
-                result.append(*all_operations)
-            
-        
+                operation = all_operations[0]
+                operation["service_name"]=service_type
+                result.append(operation)    
+ 
         return result
 
     @classmethod 
@@ -356,12 +358,12 @@ class Services(db.Model):
     def getIdUserOffer(id_param):
         historic_hired = Services.query.filter_by(id= id_param)
         all_historic_services_hired = list(map(lambda x: x.serialize(), historic_hired))
-        
         result = {}
         for eachService in all_historic_services_hired:
             user_offer = User.getUserWhoHired(eachService["id_user_offer"])
             service_type = Service_type.getServiceTypeValue(eachService["id_service_type"])
-            result = {**user_offer,  "service": service_type}
+            result = {**user_offer,  "service": service_type, "id_del_servicio": eachService["id_service_type"]}
+        
         return result
 
     def all_service_destinations(service_type_id):
