@@ -36,7 +36,6 @@ app.cli.add_command(init_db)
 def login_user(): 
     body=request.get_json()
     # auth = request.authorization   
-    # print(auth, "este es el AUTH")
     
     user = User.query.filter_by(email=body["email"]).first()  
     if user.is_active == True:
@@ -93,7 +92,6 @@ def read_loged_user(id_user):
 def update_loged_user(id_user):
     body=request.get_json() 
     # try: 
-    print(body,"HOOOOOOOOLA")
     update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
     update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
     return jsonify(update_user.serialize()), 200
@@ -137,23 +135,18 @@ def create_user_service(id_user):
     # is_active = db.session.query(db.exists().where(Services.is_active == False)).scalar()
     exists = Services.query.filter_by(id_service_type = body["id_service_type"], id_user_offer = id_user).scalar()
 
-    # print(services)
     if exists == None:
-        print(body, "holAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
         new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=body["is_active"])
         new_service.create_service()
         return jsonify(new_service.serialize()), 200
     else:
-        print(body, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIOS")
         service = Services.query.filter_by(id_service_type=body["id_service_type"]).first()
         is_active = service.is_active
         if is_active == True: 
-            print(service, "ISACTIVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEeee")
             new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
             new_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"]) 
             return jsonify(new_service.serialize()), 200
         else:
-            print("ELSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
             return "Couldn't create the service",404
     # except:
     #     return "Couldn't create the service",404

@@ -137,7 +137,7 @@ class User(db.Model):
         for eachUserWhoHired in all_historic_user_who_hires:
             name = eachUserWhoHired["name"]
             image = eachUserWhoHired["image"]
-            result = { "name": name, "image": image}
+            result = { "name": name, "image": image, "user_who_ofered_id": param_id}
 
         return result
 
@@ -316,8 +316,9 @@ class Services(db.Model):
         
         for eachservice in all_history_services:
             all_operations =  Operations.getOperations(eachservice["id"])
-            if len(Operations.getOperations(eachservice["id"])) != 0:                
-                result.append(all_operations)
+            if len(all_operations) != 0:
+                result.append(*all_operations)
+            
         
         return result
 
@@ -336,7 +337,6 @@ class Services(db.Model):
     @classmethod 
     def update_services(clss, id_service_type, id_user_offer, description, price_h):
         service = clss.query.filter_by(id_user_offer = id_user_offer, id_service_type = id_service_type).first()
-        print(service, "ADIOOOOOOOS")
         service.is_active = True
         service.description = description
         service.price_h = price_h
