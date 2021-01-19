@@ -91,12 +91,12 @@ def read_loged_user(id_user):
 @app.route('/user/<int:id_user>', methods=['PUT'])
 def update_loged_user(id_user):
     body=request.get_json() 
-    # try: 
-    update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
-    update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
-    return jsonify(update_user.serialize()), 200
-    # except:
-    #     return "Couldn't update user info", 401
+    try: 
+        update_user= User(id=id_user, name = body["name"], email= body["email"], last_name= body["last_name"], phone= body["phone"], location= body["location"], biografy= body["biografy"], image = body["image"])
+        update_user.update_user(id_user, body["name"], body["email"], body["last_name"], body["phone"], body["location"], body["biografy"], body["image"])
+        return jsonify(update_user.serialize()), 200
+    except:
+        return "Couldn't update user info", 401
 
 @app.route('/user/<int:id_user>', methods=['DELETE'])
 def delete_user(id_user):
@@ -110,11 +110,11 @@ def delete_user(id_user):
 #///////////////////////////////////////////////////////
 @app.route('/<int:id_service_type>/services', methods=['GET'])
 def get_all_services(id_service_type):  
-    # try:
-    all_services = Services.read_all_services(id_service_type) 
-    return jsonify(all_services), 200
-    # except:
-    #     return "Couldn't find the services",404
+    try:
+        all_services = Services.read_all_services(id_service_type) 
+        return jsonify(all_services), 200
+    except:
+        return "Couldn't find the services",404
 
 
 @app.route('/user/<int:id_user>/service_disabled', methods=['GET'])
@@ -130,26 +130,24 @@ def read_user_services_disabled(id_user):
 # @token_required
 def create_user_service(id_user):
     body=request.get_json()
-    # service_exists = db.session.query(db.exists().where(Services.id_service_type == body['id_service_type'])).scalar()
-    # user_exists = db.session.query(db.exists().where(Services.id_service_type == body['id_service_type'])).scalar()
-    # is_active = db.session.query(db.exists().where(Services.is_active == False)).scalar()
-    exists = Services.query.filter_by(id_service_type = body["id_service_type"], id_user_offer = id_user).scalar()
+    try:
+        exists = Services.query.filter_by(id_service_type = body["id_service_type"], id_user_offer = id_user).scalar()
 
-    if exists == None:
-        new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=body["is_active"])
-        new_service.create_service()
-        return jsonify(new_service.serialize()), 200
-    else:
-        service = Services.query.filter_by(id_service_type=body["id_service_type"]).first()
-        is_active = service.is_active
-        if is_active == True: 
-            new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
-            new_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"]) 
+        if exists == None:
+            new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=body["is_active"])
+            new_service.create_service()
             return jsonify(new_service.serialize()), 200
         else:
-            return "Couldn't create the service",404
-    # except:
-    #     return "Couldn't create the service",404
+            service = Services.query.filter_by(id_service_type=body["id_service_type"]).first()
+            is_active = service.is_active
+            if is_active == True: 
+                new_service = Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active =True )
+                new_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"]) 
+                return jsonify(new_service.serialize()), 200
+            else:
+                return "Couldn't create the service",404
+    except:
+        return "Couldn't create the service",404
 
 @app.route('/user/<int:id_user>/service', methods=['GET'])
 # @token_required
@@ -164,21 +162,21 @@ def read_user_services(id_user):
 # @token_required
 def update_user_service(id_user):
     body=request.get_json()
-    # try:
-    update_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=True)
-    update_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"])
-    return jsonify(update_service.serialize()), 200
-    # except:
-    #     return "Couldn't update the service",404
+    try:
+        update_service= Services(id_service_type=body["id_service_type"], id_user_offer=id_user, description=body["description"], price_h=body["price_h"], is_active=True)
+        update_service.update_services(body["id_service_type"], id_user, body["description"], body["price_h"])
+        return jsonify(update_service.serialize()), 200
+    except:
+        return "Couldn't update the service",404
 
 @app.route('/user/<int:id_user>/dservices/<int:id_service_type>', methods=['DELETE'])
 # @token_required
 def delete_user_service(id_user, id_service_type):
-    # try:
-    deleted_service = Services.delete_service(id_user,id_service_type)
-    return jsonify(deleted_service.serialize()), 202
-    # except:
-    #     return "Couldn't delete the service", 409
+    try:
+        deleted_service = Services.delete_service(id_user,id_service_type)
+        return jsonify(deleted_service.serialize()), 202
+    except:
+        return "Couldn't delete the service", 409
 
 
 #///////////////////////////////////////////////////////
@@ -207,22 +205,22 @@ def read_pets_by_user(id_user):
 # @token_required
 def update_user_pet(id_user):
     body=request.get_json()
-    # try:
-    update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
-    update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], isTrue(body["gender"]), body["weight"], body["size"], body["diseases"], isTrue(body["sterilized"]))
-    return (update_pet.serialize())
-    # except:
-    #     return "Couldn't update pet", 404
+    try:
+        update_pet = Animals(user_id = id_user, id= body["id"], name = body["name"], image = body["image"], animal_type = body["animal_type"], age = body["age"], personality = body["personality"],  gender = isTrue(body["gender"]) , weight= body["weight"], size = body["size"], diseases= body["diseases"], sterilized= isTrue(body["sterilized"]))
+        update_pet.update_pets(id_user, body["id"], body["name"], body["image"], body["animal_type"], body["age"], body["personality"], isTrue(body["gender"]), body["weight"], body["size"], body["diseases"], isTrue(body["sterilized"]))
+        return (update_pet.serialize())
+    except:
+        return "Couldn't update pet", 404
 
 @app.route('/user/pet/<int:pet_id>', methods=['DELETE'])
 # @token_required
 def delete_user_pet(pet_id):
-    # try:
-    deleted_pet = Animals.delete_pet(pet_id)
-    # return jsonify(deleted_pet.serialize()), 202
-    return jsonify(deleted_pet), 202
-    # except:
-    #     return "Couldn't delete the pet", 409
+    try:
+        deleted_pet = Animals.delete_pet(pet_id)
+        # return jsonify(deleted_pet.serialize()), 202
+        return jsonify(deleted_pet), 202
+    except:
+        return "Couldn't delete the pet", 409
 
 @app.route('/animals_type', methods=['GET'])
 def read_animals_type():
@@ -242,12 +240,12 @@ def read_pets_character():
 
 @app.route('/user/workedfor/<int:id_user_param>', methods=['GET'])
 def read_history_workedfor(id_user_param):
-    #  try:
-    history_service = Services.read_service_ofered(id_user_param)
+     try:
+        history_service = Services.read_service_ofered(id_user_param)
     
-    return jsonify(history_service), 200
-    #  except:
-    #     return "Couldn't find  history", 409
+        return jsonify(history_service), 200
+     except:
+        return "Couldn't find  history", 409
 
 @app.route('/user/hired/<int:id_user>', methods=['GET'])
 def read_history_hired(id_user):
@@ -263,9 +261,9 @@ def read_history_hired(id_user):
 def get_services_distance(id_user, service_type_id):
     destiny(id_user, service_type_id)
     result = destiny(id_user, service_type_id)
-   
+    sorted_result = sorted(result, key=lambda k: k['distance']) 
 
-    return jsonify(result),200
+    return jsonify(sorted_result),200
 
 @app.route('/paymant/paypal/', methods=['POST'])
 def create_operation():
